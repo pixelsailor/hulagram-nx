@@ -4,15 +4,23 @@
   "license": "MIT",
   "scripts": {},
   "private": true,
-  "dependencies": {},
   "devDependencies": {
     "@nx/js": "21.1.0",
+    "@nx/vite": "21.1.0",
+    "@nx/web": "21.1.0",
+    "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@swc-node/register": "~1.9.1",
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
+    "@vitest/ui": "^3.0.0",
+    "jiti": "2.4.2",
     "nx": "21.1.0",
     "prettier": "^2.6.2",
+    "svelte-check": "^4.2.1",
     "tslib": "^2.3.0",
-    "typescript": "~5.7.2"
-  }
+    "typescript": "~5.7.2",
+    "vite": "^6.3.5",
+    "vitest": "^3.1.4"
+  },
+  "dependencies": {}
 }
