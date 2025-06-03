@@ -1,0 +1,69 @@
+services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: ${APP_NAME}-nginx
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - "./nginx/:/etc/nginx/templates/"
+      - ./wordpress:/var/www/html:rw,cached
+      - ./certs:/etc/certs
+    environment:
+      - "NGINX_ENVSUBST_TEMPLATE_SUFFIX=.conf"
+      - "DOMAIN=${DOMAIN}"
+    depends_on:
+      - wordpress
+    restart: always
+
+  mysql:
+    image: mariadb:10.7
+    container_name: ${APP_NAME}-mysql
+    command: --lower_case_table_names=2
+    volumes:
+       - './data/db:/var/lib/mysql:delegated'
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+    restart: always
+    ports:
+      - '3306:3306'
+
+  wordpress:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${APP_NAME}-wordpress
+    volumes:
+      - ./wordpress:/var/www/html:rw,cached
+      - ./config/php.ini:/usr/local/etc/php/conf.d/php.ini
+    depends_on:
+      - mysql
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: ${APP_NAME}-phpmyadmin
+    environment:
+      PMA_HOST: 'mysql'
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - '8082:80'
+    links:
+      - mysql:mysql
+
+  mailhog:
+    container_name: ${APP_NAME}-mailhog
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+  composer:
+    image: composer
+    container_name: ${APP_NAME}-composer
+    working_dir: /var/www/html
+    restart: 'no'
+    volumes:
+      - ./wordpress:/var/www/html:rw,cached
