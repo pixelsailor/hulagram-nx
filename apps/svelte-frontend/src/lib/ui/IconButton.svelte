@@ -1,10 +1,17 @@
 <script lang="ts">
 	import { BUTTON_MIN_TARGET_HEIGHT } from "$lib/constants";
 
-  let { onclick, children } = $props();
+  let { children, ...props } = $props();
 </script>
 
-<button class="icon-button" style:min-width={`${BUTTON_MIN_TARGET_HEIGHT / 4}rem`} style:height={`${BUTTON_MIN_TARGET_HEIGHT / 4}rem`} onclick={onclick}>
+<button
+  class={['icon-button', props.class]}
+  style:min-width={`${BUTTON_MIN_TARGET_HEIGHT / 4}rem`}
+  style:height={`${BUTTON_MIN_TARGET_HEIGHT / 4}rem`}
+  style={props.style}
+  onclick={props.onclick}
+  disabled={props.disabled}
+>
   <span class="icon-button__icon">
     {@render children()}
   </span>
@@ -15,6 +22,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .icon-button:disabled {
+    opacity: .7;
   }
 
   .icon-button__icon {

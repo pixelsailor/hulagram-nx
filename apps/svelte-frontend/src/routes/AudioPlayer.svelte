@@ -10,6 +10,8 @@
   let time = $state(0);
   let duration = $state(0);
 
+  let hasNext = $state(true);
+
   function format(time: number) {
     if (isNaN(time)) return '--:--';
 
@@ -23,7 +25,8 @@
     if (!playlist.tracks) return;
     const currentIndex = (playlist as Playlist).tracks.findIndex((track) => track.file === src);
     const nextIndex = currentIndex + 1;
-    if (nextIndex < playlist.tracks.length) {
+    hasNext = nextIndex < playlist.tracks.length;
+    if (hasNext) {
       const nextTrack = playlist.tracks[nextIndex];
       src = nextTrack.file;
       title = nextTrack.title;
@@ -96,6 +99,11 @@
           <path d="m12 1c-7.71 0-11 3.29-11 11s3.29 11 11 11 11-3.29 11-11-3.29-11-11-11zm-1 14c0 .552-.447 1-1 1s-1-.448-1-1v-6c0-.552.447-1 1-1s1 .448 1 1zm4 0c0 .552-.447 1-1 1s-1-.448-1-1v-6c0-.552.447-1 1-1s1 .448 1 1z"/>
         </svg>
       {/if}
+    </IconButton>
+    <IconButton onclick={() => time = duration} disabled={!hasNext}>
+      <svg xmlns="http://www.w3.org/2000/svg" id="play-next-icon" viewBox="0 0 24 24">
+        <path d="M2.858,2.194c-.325,.1-.578,.358-.67,.686-.049,.172-1.188,4.272-1.188,9.121s1.139,8.948,1.188,9.12c.093,.329,.347,.588,.674,.687,.161,.049,4.007,1.193,9.139,1.193,5.175,0,8.982-1.146,9.142-1.194,.325-.1,.578-.358,.67-.686,.049-.172,1.188-4.272,1.188-9.121s-1.139-8.948-1.188-9.12c-.093-.329-.347-.588-.674-.687-.161-.049-4.007-1.193-9.139-1.193C6.825,1,3.018,2.146,2.858,2.194ZM12.138,7.916c3.206,.776,5.225,2.982,5.604,3.425,.022,.025,.532,.586,.036,1.287-.08,.113-2.151,2.667-5.579,3.47-.426,.1-.867-.089-1.089-.466-.035-.059-.708-1.214-.961-2.626h-3.154c-.552,0-1-.448-1-1s.448-1,1-1h3.143c.231-1.396,.857-2.543,.89-2.602,.218-.394,.672-.594,1.11-.488Z"/>
+      </svg>
     </IconButton>
   </Toolbar>
 </div>

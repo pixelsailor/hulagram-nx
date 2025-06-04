@@ -52,9 +52,9 @@
             </IconButton>
           {/if}
           {#if audioPlayer.src === track.file}
-            <video autoplay loop height="32" width="32">
+            <!-- <video autoplay loop height="32" width="32">
               <source src={festival} type="video/mp4" />
-            </video>
+            </video> -->
           {:else}
             <IconButton onclick={() => selectSongHandler(track)}>
               <svg class="play-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor">
