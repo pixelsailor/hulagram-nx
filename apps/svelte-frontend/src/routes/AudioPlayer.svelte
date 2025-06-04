@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
+	// import { getContext } from 'svelte';
 	import Toolbar from '$lib/ui/Toolbar.svelte';
 	import IconButton from '$lib/ui/IconButton.svelte';
-	import type { Playlist } from '$lib/types';
-  import { currentPlaylist } from './PlaylistCard.svelte';
+	// import type { Playlist } from '$lib/types';
+  // import { currentPlaylist } from './PlaylistCard.svelte';
 
   let { src, title, artist, paused = $bindable<boolean>(), playlist, showPlaylist = $bindable() } = $props();
   
-  let playlistCtx: any = getContext('playlist');
+  // let playlistCtx: any = getContext('playlist');
 
   let time = $state(0);
   let duration = $state(0);
@@ -22,11 +22,11 @@
   }
 
   function showCurrentPlaylist() {
-    if (playlist.databaseId !== currentPlaylist.databaseId) {
-      playlistCtx.onSelectPlaylist(currentPlaylist);
-    } else {
-      showPlaylist = true;
-    }
+    // if (playlist.databaseId !== currentPlaylist.databaseId) {
+    //   playlistCtx.onSelectPlaylist(currentPlaylist);
+    // } else {
+    //   showPlaylist = true;
+    // }
   }
 </script>
 

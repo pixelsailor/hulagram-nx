@@ -1,33 +1,34 @@
 <script lang="ts">
 	import '@fontsource/allison';
 	import { setContext } from 'svelte';
+	import { page } from '$app/state';
 
 	import { MIN_DESKTOP_SIZE } from '$lib/constants';
 	import AudioPlayer from './AudioPlayer.svelte';
 	import PlaylistCard from './PlaylistCard.svelte';
 	import type { Playlist } from './+page';
 	import '../app.css';
-	import { fly } from 'svelte/transition';
-	import type { AudioPlayerContext } from '$lib/types';
 
-	let { children, data } = $props();
-	
-	const { title, description } = data.layout.data.generalSettings;
 	const BG_OPACITY = 0.6;
 
+	let { children, data } = $props();
+	const { title, description } = data.response.data.generalSettings;
+	const playlists: Playlist[] = data.response.data.playlists.nodes;
+
+	let selectedId = $derived(page.url.searchParams.get('playlist'));
+	let selectedPlaylist = $derived(playlists.find((p) => `${p.databaseId}` === selectedId));
+	
 	let showPlaylist = $state(false);
-	let selectedPlaylist = $state.raw<Playlist>();
+	// setContext('playlist', { isVisible: () => showPlaylist, playlist: () => selectedPlaylist, onSelectPlaylist });
+	setContext('showPlaylist', {
+		get: () => (selectedPlaylist) ? showPlaylist : false,
+		set: (val: boolean) => showPlaylist = val
+	})
+	
 	let audioPlayer = $state({ title: '', paused: true, src: '', artist: '', playlist: {}, onSelectSong });
-	let showBottomSheet = $derived(showPlaylist || audioPlayer.src)
-
-	setContext('playlist', { isVisible: () => showPlaylist, playlist: () => selectedPlaylist, onSelectPlaylist });
-
-	function onSelectPlaylist(playlist: Playlist) {
-		selectedPlaylist = playlist;
-		showPlaylist = true;
-	}
-
 	setContext('audioPlayer', () => audioPlayer);
+
+	let showBottomSheet = $derived(showPlaylist || audioPlayer.src);
 
 	function onSelectSong(song: { artist: string; file: string; title: string; }, playlist: Playlist) {
 		audioPlayer = {
@@ -36,7 +37,7 @@
 			title: song.title,
 			paused: false,
 			playlist: playlist,
-			onSelectSong: onSelectSong
+			onSelectSong
 		}
 	}
 
@@ -87,10 +88,6 @@
 			return 1 - (BG_OPACITY/hvh) * vp.y;
 		}
 	});
-
-	// let footerStyle = $derived((showPlaylist && selectedPlaylist) ? 'top-0' : 'mt-8')
-
-	$inspect(audioPlayer);
 </script>
 
 <svelte:window bind:innerWidth={vp.vw} bind:innerHeight={vp.vh} bind:scrollY={vp.y} />

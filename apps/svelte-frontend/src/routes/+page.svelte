@@ -1,50 +1,31 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-  // import PlaylistCard from './PlaylistCard.svelte';
-	import type { PlaylistContext, Playlists } from '$lib/types';
-	import type { Playlist } from './+page';
+  import { goto } from '$app/navigation';
+  import { page } from '$app/state';
 
-  let { data } = $props();
+  const playlists = page.data.response.data.playlists.nodes;
 
-  const playlists = data.page.data.playlists.nodes;
-  // const cardOffset = '64px'; // top of the card element - margin - card handle height
+  let showPlaylistCtx: any = getContext('showPlaylist');
 
-  let playlistCtx: PlaylistContext = getContext('playlist');
-  // let vp: { w: () => number, h: () => number, offset: () => number, isDesktop: () => boolean} = getContext('viewport');
-
-  // let expandendCardHeight = $state(vp.h() - )
-
-  // let selectedPlaylist = $state.raw<Playlist>();
-
-  // let showPlaylist = $state(false);
-
-  function selectPlaylist(playlist: Playlist) {
-    playlistCtx.onSelectPlaylist(playlist)
+  function selectPlaylist(id: number) {
+    const params = new URLSearchParams(window.location.search);
+    params.set('playlist', `${id}`);
+    goto(`?${params.toString()}`, { keepFocus: true, replaceState: false });
+    showPlaylistCtx.set(true);
   }
-
-  // function showSelectedPlaylist(playlist: Playlist) {
-  //   selectedPlaylist = playlist;
-  //   showPlaylist = true;
-  // }
 </script>
 
 <svelte:boundary>
   <ul class="">
     {#each playlists as playlist}
       <li class="playlist__title my-12">
-        <button type="button" class="button" onclick={() => selectPlaylist(playlist)}>
+        <button type="button" class="button" onclick={() => selectPlaylist(playlist.databaseId)}>
           {playlist.title}
         </button>
       </li>
     {/each}
   </ul>
 </svelte:boundary>
-
-<!-- {#if selectedPlaylist}
-  <div class="fixed left-0 right-0" style:top="100px">
-    <PlaylistCard playlist={selectedPlaylist} bind:showPlaylist />
-  </div>
-{/if} -->
 
 <style>
   .button {

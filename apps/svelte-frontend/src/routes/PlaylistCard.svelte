@@ -3,12 +3,14 @@
 </script>
 
 <script lang="ts">
+	import { getContext } from 'svelte';
+	import { fly } from 'svelte/transition';
+
   import { LIST_ITEM_PADDING, TOOLBAR_HEIGHT_PX } from '$lib/constants';
   import festival from '$lib/images/festival.mp4';
-	import { getContext } from 'svelte';
-  import type { Playlist } from './+page';
 	import IconButton from '$lib/ui/IconButton.svelte';
-	import { fly } from 'svelte/transition';
+
+  import type { Playlist } from './+page';
 
   let { playlist, showPlaylist = $bindable() }: { playlist: Playlist, showPlaylist: boolean } = $props();
 

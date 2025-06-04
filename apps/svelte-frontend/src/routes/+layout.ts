@@ -13,10 +13,33 @@ export type GeneralSettings = {
 }
 
 export const load: LayoutLoad = async ({ fetch }) => {
+  // const query = `{
+  //   generalSettings {
+  //     title
+  //     description
+  //   }
+  // }`;
+
   const query = `{
     generalSettings {
       title
       description
+    },
+    playlists {
+      nodes {
+        databaseId
+        date
+        title
+        artistName
+        tracks {
+          title
+          file
+          id
+          artist
+          lyrics
+          downloadable
+        }
+      }
     }
   }`;
 
@@ -27,6 +50,8 @@ export const load: LayoutLoad = async ({ fetch }) => {
     },
     body: JSON.stringify({ query }),
   });
-  const layout: GeneralSettings = await res.json();
-  return {layout};
+  // const layout: GeneralSettings = await res.json();
+  // return {layout};
+  const response = await res.json();
+  return {response};
 }
