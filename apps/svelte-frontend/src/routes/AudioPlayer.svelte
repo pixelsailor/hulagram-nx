@@ -1,14 +1,12 @@
 <script lang="ts">
-	// import { getContext } from 'svelte';
 	import Toolbar from '$lib/ui/Toolbar.svelte';
 	import IconButton from '$lib/ui/IconButton.svelte';
-	// import type { Playlist } from '$lib/types';
-  // import { currentPlaylist } from './PlaylistCard.svelte';
+	import type { Playlist } from '$lib/types';
 
   let { src, title, artist, paused = $bindable<boolean>(), playlist, showPlaylist = $bindable() } = $props();
-  
-  // let playlistCtx: any = getContext('playlist');
 
+  let playerWidth = $state();
+  
   let time = $state(0);
   let duration = $state(0);
 
@@ -18,7 +16,21 @@
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
 
-    return `${minutes}: ${seconds < 10 ? `0${seconds}` : seconds}`;
+    return `${minutes}: ${seconds < 10 ? `0${seconds}`:seconds}`;
+  }
+
+  function playNext() {
+    if (!playlist.tracks) return;
+    const currentIndex = (playlist as Playlist).tracks.findIndex((track) => track.file === src);
+    const nextIndex = currentIndex + 1;
+    if (nextIndex < playlist.tracks.length) {
+      const nextTrack = playlist.tracks[nextIndex];
+      src = nextTrack.file;
+      title = nextTrack.title;
+      artist = nextTrack.artist;
+      time = 0;
+      paused = false;
+    }
   }
 
   function showCurrentPlaylist() {
@@ -30,14 +42,15 @@
   }
 </script>
 
-<div class={['audio-player', { paused }]} style:background-color="lime">
+<div class={['audio-player', { paused }]} style:background-color="lime" bind:clientWidth={playerWidth}>
   <audio
     {src}
     bind:currentTime={time}
     bind:duration
     bind:paused
+    onended={playNext}
   ></audio>
-  <div class="audio-player__slider flex flex-row w-full h-2 overflow-hidden" onpointerdown={(e) => {
+  <div class="audio-player__slider relative w-full h-1 overflow-hidden" onpointerdown={(e) => {
     const div = e.currentTarget;
 
     function seek(e: any) {
@@ -61,8 +74,7 @@
       { once: true }
     );
   }}>
-    <div class="progress grow" style="--progress: {time / duration}%"></div>
-    <div class="progress-remaining h-full basis-full shrink"></div>
+    <div class="progress" style="--progress: {time / duration}%; --slider-width: {playerWidth}px;"></div>
   </div>
   <Toolbar>
     <div class="audio-player__info flex-grow" onclick={showCurrentPlaylist}>
@@ -98,12 +110,11 @@
   }
 
   .progress {
-    width: calc(100 * var(--progress));
-    height: 100%;
-    /* background-color: teal; */
-  }
-
-  .progress-remaining {
     background-color: white;
+    width: calc(var(--slider-width) - (100 * var(--progress)));
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 </style>

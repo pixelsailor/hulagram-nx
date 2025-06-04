@@ -36,7 +36,7 @@
 			src: song.file,
 			title: song.title,
 			paused: false,
-			playlist: playlist,
+			playlist: selectedPlaylist!,
 			onSelectSong
 		}
 	}

@@ -1,7 +1,3 @@
-<script module>
-  export let currentPlaylist: Playlist;
-</script>
-
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import { fly } from 'svelte/transition';
@@ -18,7 +14,6 @@
   const audioPlayer = getAudioPlayer();
 
   function selectSongHandler(song: any) {
-    currentPlaylist = playlist;
     audioPlayer.onSelectSong(song, playlist);
   }
 
