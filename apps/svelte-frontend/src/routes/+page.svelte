@@ -10,7 +10,7 @@
   function selectPlaylist(id: number) {
     const params = new URLSearchParams(window.location.search);
     params.set('playlist', `${id}`);
-    goto(`?${params.toString()}`, { keepFocus: true, replaceState: false });
+    goto(`?${params.toString()}`, { keepFocus: true, replaceState: false, noScroll: true });
     showPlaylistCtx.set(true);
   }
 </script>
