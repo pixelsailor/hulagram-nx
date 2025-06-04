@@ -114,7 +114,7 @@
 			class="object-left-bottom object-cover w-full"
 		/>
 	</picture>
-	<div class={['main__container', vp.isDesktop ? 'mx-auto' : 'mx-4']}>
+	<div class={['main__container pb-16', vp.isDesktop ? 'mx-auto' : 'mx-4']}>
 		{@render children()}
 	</div>
 </main>

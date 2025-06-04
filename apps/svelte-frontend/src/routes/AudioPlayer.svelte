@@ -11,6 +11,10 @@
   let duration = $state(0);
 
   let hasNext = $state(true);
+  let currentTrackIndex = $derived((playlist as Playlist).tracks.findIndex((track) => track.file === src));
+  
+  let hasLyrics = $derived(!!(playlist as Playlist).tracks[currentTrackIndex].lyrics);
+  let showLyrics = $state(false);
 
   function format(time: number) {
     if (isNaN(time)) return '--:--';
@@ -23,8 +27,7 @@
 
   function playNext() {
     if (!playlist.tracks) return;
-    const currentIndex = (playlist as Playlist).tracks.findIndex((track) => track.file === src);
-    const nextIndex = currentIndex + 1;
+    const nextIndex = currentTrackIndex + 1;
     hasNext = nextIndex < playlist.tracks.length;
     if (hasNext) {
       const nextTrack = playlist.tracks[nextIndex];
@@ -34,6 +37,11 @@
       time = 0;
       paused = false;
     }
+  }
+
+  function toggleLyrics() {
+    console.log('toggleLyrics');
+    
   }
 
   function showCurrentPlaylist() {
@@ -80,8 +88,8 @@
     <div class="progress" style="--progress: {time / duration}%; --slider-width: {playerWidth}px;"></div>
   </div>
   <Toolbar>
-    <div class="audio-player__info flex-grow" onclick={showCurrentPlaylist}>
-      <div class="audio-player__description">
+    <div class="audio-player__info flex-auto" onclick={showCurrentPlaylist}>
+      <div class="audio-player__description w-full">
         <p class="song-title font-bold truncate">{title}</p>
         <p class="artist-name text-sm truncate">{artist}</p>
       </div>
@@ -89,6 +97,13 @@
         <span>{format(time)}</span> / <span>{duration ? format(duration):'--:--'}</span>
       </p>
     </div>
+    {#if hasLyrics}
+      <IconButton onclick={toggleLyrics} disabled={!hasLyrics}>
+        <svg id="lyrics-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="m20.088 2.783c-.08-.359-.352-.646-.706-.746-.15-.042-3.73-1.037-7.382-1.037s-7.231.995-7.382 1.037c-.354.1-.626.387-.706.746-.037.168-.912 4.165-.912 9.217s.875 9.049.912 9.217c.08.359.352.646.706.746.15.042 3.73 1.037 7.382 1.037s7.231-.995 7.382-1.037c.354-.1.626-.387.706-.746.037-.168.912-4.165.912-9.217s-.875-9.049-.912-9.217zm-9.088 13.217h-3c-.553 0-1-.447-1-1s.447-1 1-1h3c.553 0 1 .447 1 1s-.447 1-1 1zm5-4h-8c-.553 0-1-.447-1-1s.447-1 1-1h8c.553 0 1 .447 1 1s-.447 1-1 1zm0-4h-8c-.553 0-1-.447-1-1s.447-1 1-1h8c.553 0 1 .447 1 1s-.447 1-1 1z"/>
+        </svg>
+      </IconButton>
+    {/if}
     <IconButton onclick={() => paused = !paused}>
       {#if paused}
         <svg id="play-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
