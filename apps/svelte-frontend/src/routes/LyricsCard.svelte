@@ -7,10 +7,14 @@
   let vp: { w: () => number, h: () => number, offset: () => number, isDesktop: () => boolean} = getContext('viewport');
 </script>
 
-<article class="card bg-black rounded-t-xl shadow text-white grow w-full flex flex-col overflow-hidden" transition:fly={{y: vp.h()}}>
+<article
+  class="card rounded-t-xl shadow grow w-full flex flex-col overflow-hidden"
+  style:background="rgba(255,255,255,0.7)"
+  transition:fly={{y: vp.h()}}
+>
   <button class="card__handle w-full h-5" onclick={() => showLyrics = !showLyrics}>
     <span
-      class="card__handle__line block mx-auto bg-white my-2 w-8 h-1 rounded opacity-50 overflow-hidden"
+      class="card__handle__line block mx-auto bg-black my-2 w-8 h-1 rounded opacity-50 overflow-hidden"
       role="presentation"
     ></span>
     <span class="sr-only">Close lyrics</span>

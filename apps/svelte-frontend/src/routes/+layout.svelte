@@ -136,15 +136,31 @@
 		{@render children()}
 	</div>
 	<div class="text-xs mx-4 m-1 flex justify-between text-gray-700">
-		<p>&copy; 2006 - 2025 Randy and Linda Smith</p>
+		<p>&copy; 2006-2025 Randy and Linda Smith</p>
 		<p><a href="https://www.cxii.us">CXII</a></p>
 	</div>
 </main>
 
 <footer class={[ 
-  'fixed bottom-0 left-0 right-0 flex flex-col items-stretch', 
+  'fixed bottom-0 left-0 right-0 flex flex-col items-stretch overflow-hidden bg-white z-50', 
   {'top-0 mt-8': (showPlaylist || showLyrics) && selectedPlaylist}
 ]}>
+	<picture class="absolute inset-0 -z-1" style:opacity={opacity}>
+		<source
+			media="(min-width: 650px)"
+			srcset="https://hulagram.local/app/uploads/2025/05/bg-waves__876-216-scaled.webp"
+		/>
+		<source
+			media="(max-width: 649px)"
+			srcset="https://hulagram.local/app/uploads/2025/05/bg-waves__375-812-216.webp"
+		/>
+		<img
+			src="https://hulagram.local/app/uploads/2025/05/bg-waves__375-812-216.webp"
+			alt="Overhead view of a shoreline with small waves gently crashing on a beach"
+			role="presentation"
+			class="object-left-bottom object-cover w-full h-full"
+		/>
+	</picture>
 	{#if showPlaylist && selectedPlaylist}
 		<PlaylistCard playlist={selectedPlaylist} bind:showPlaylist />
 	{/if}
@@ -152,23 +168,7 @@
 		<LyricsCard lyrics={currentLyrics} bind:showLyrics />
 	{/if}
 	{#if audioPlayer.src}
-		<div class="audio-player__container relative bg-white h-22 pt-1 overflow-hidden" bind:clientHeight={vp.bottomOffset}>
-			<picture class="absolute bottom-0 left-0 right-0" style:opacity={opacity} style:height={`${vp.vh}px`}>
-				<source
-					media="(min-width: 650px)"
-					srcset="https://hulagram.local/app/uploads/2025/05/bg-waves__876-216-scaled.webp"
-				/>
-				<source
-					media="(max-width: 649px)"
-					srcset="https://hulagram.local/app/uploads/2025/05/bg-waves__375-812-216.webp"
-				/>
-				<img
-					src="https://hulagram.local/app/uploads/2025/05/bg-waves__375-812-216.webp"
-					alt="Overhead view of a shoreline with small waves gently crashing on a beach"
-					role="presentation"
-					class="object-left-bottom object-cover w-full h-full"
-				/>
-			</picture>
+		<div class="audio-player__container relative h-22 pt-1 overflow-hidden" style:flex="0 0 5.5rem" bind:clientHeight={vp.bottomOffset}>
 			<AudioPlayer {...audioPlayer} bind:paused={audioPlayer.paused} bind:showPlaylist />
 		</div>
 	{/if}

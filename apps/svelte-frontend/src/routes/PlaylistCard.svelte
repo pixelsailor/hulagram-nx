@@ -20,10 +20,10 @@
   let vp: { w: () => number, h: () => number, offset: () => number, isDesktop: () => boolean} = getContext('viewport');
 </script>
 
-<article class="card bg-black rounded-t-xl shadow text-white grow w-full flex flex-col overflow-hidden" transition:fly={{y: vp.h()}}>
+<article class="card rounded-t-xl shadow grow w-full flex flex-col overflow-hidden" style:background="rgba(255,255,255,0.7)" transition:fly={{y: vp.h()}}>
   <button class="card__handle w-full h-5" onclick={() => showPlaylist = !showPlaylist}>
     <span
-      class="card__handle__line block mx-auto bg-white my-2 w-8 h-1 rounded opacity-50 overflow-hidden"
+      class="card__handle__line block mx-auto bg-black my-2 w-8 h-1 rounded opacity-50 overflow-hidden"
       role="presentation"
     ></span>
     <span class="sr-only">Resize</span>
@@ -35,14 +35,13 @@
   <main class="playlist__content h-full pb-4 overflow-y-auto overscroll-contain">
     <ul class="playlist__tracks">
       {#each playlist.tracks as track, index}
-        <li class="playlist__track flex items-center py-{LIST_ITEM_PADDING} pl-4 pr-2 gap-4">
-          <div>{index + 1}.</div>
-          <div class="playlist__track grow">
+        <li class="playlist__track flex items-center py-{LIST_ITEM_PADDING} pl-4 pr-2 gap-1">
+          <div class="playlist__track grow basic-[fit-content]">
             <p class="playlist__track__name">{track.title}</p>
           </div>
           {#if track.downloadable}
             <IconButton onclick={() => {}} label="Download">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="download-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="download-icon" width="100%" height="100%" fill="currentColor">
                 <path d="M12,1C6.878,1,1,2.25,1,12c0,7.71,3.29,11,11,11,5.122,0,11-1.25,11-11,0-7.71-3.29-11-11-11Zm0,21c-7.103,0-10-2.897-10-10S4.897,2,12,2s10,2.897,10,10-2.897,10-10,10Z"/>
                 <g>
                   <path d="M12,1C6.878,1,1,2.25,1,12c0,7.71,3.29,11,11,11,5.122,0,11-1.25,11-11,0-7.71-3.29-11-11-11Zm0,21c-7.103,0-10-2.897-10-10S4.897,2,12,2s10,2.897,10,10-2.897,10-10,10Z"/>
