@@ -2,6 +2,7 @@
 	import Toolbar from '$lib/ui/Toolbar.svelte';
 	import IconButton from '$lib/ui/IconButton.svelte';
 	import type { Playlist } from '$lib/types';
+	import { getContext } from 'svelte';
 
   let { src, title, artist, paused = $bindable<boolean>(), playlist, showPlaylist = $bindable() } = $props();
 
@@ -39,9 +40,10 @@
     }
   }
 
+  const lyricsCtx: any = getContext('lyrics');
+  
   function toggleLyrics() {
-    console.log('toggleLyrics');
-    
+    lyricsCtx.set(!lyricsCtx.get());
   }
 
   function showCurrentPlaylist() {

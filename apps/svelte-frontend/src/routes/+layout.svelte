@@ -6,6 +6,7 @@
 	import { MIN_DESKTOP_SIZE } from '$lib/constants';
 	import AudioPlayer from './AudioPlayer.svelte';
 	import PlaylistCard from './PlaylistCard.svelte';
+	import LyricsCard from './LyricsCard.svelte';
 	import type { Playlist } from './+page';
 	import '../app.css';
 
@@ -29,6 +30,15 @@
 	setContext('audioPlayer', () => audioPlayer);
 
 	let showBottomSheet = $derived(showPlaylist || audioPlayer.src);
+	let showLyrics = $state(false);
+	let currentLyrics = $derived(
+		audioPlayer.src ? 
+			playlists
+				.find(p => p.databaseId === selectedPlaylist?.databaseId)
+				?.tracks.find(t => t.file === audioPlayer.src)
+				?.lyrics 
+			: ''
+	);
 
 	function onSelectSong(song: { artist: string; file: string; title: string; }, playlist: Playlist) {
 		audioPlayer = {
@@ -88,6 +98,14 @@
 			return 1 - (BG_OPACITY/hvh) * vp.y;
 		}
 	});
+
+	setContext('lyrics', {
+		get: () => showLyrics,
+		set: (val: boolean) => {
+			if (val) showPlaylist = false; // Close playlist when opening lyrics
+			showLyrics = val;
+		}
+	});
 </script>
 
 <svelte:window bind:innerWidth={vp.vw} bind:innerHeight={vp.vh} bind:scrollY={vp.y} />
@@ -123,9 +141,15 @@
 	</div>
 </main>
 
-<footer class={[ 'fixed bottom-0 left-0 right-0 flex flex-col items-stretch', {'top-0 mt-8': showPlaylist && selectedPlaylist}]}>
+<footer class={[ 
+  'fixed bottom-0 left-0 right-0 flex flex-col items-stretch', 
+  {'top-0 mt-8': (showPlaylist || showLyrics) && selectedPlaylist}
+]}>
 	{#if showPlaylist && selectedPlaylist}
 		<PlaylistCard playlist={selectedPlaylist} bind:showPlaylist />
+	{/if}
+	{#if showLyrics && currentLyrics}
+		<LyricsCard lyrics={currentLyrics} bind:showLyrics />
 	{/if}
 	{#if audioPlayer.src}
 		<div class="audio-player__container relative bg-white" bind:clientHeight={vp.bottomOffset}>
