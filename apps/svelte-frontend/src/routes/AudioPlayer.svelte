@@ -53,7 +53,7 @@
   }
 </script>
 
-<div class={['audio-player relative py-3', { paused }]} style:background-color="lime" bind:clientWidth={playerWidth}>
+<div class={['audio-player relative py-3', { paused }]} bind:clientWidth={playerWidth}>
   <audio
     {src}
     bind:currentTime={time}
@@ -93,7 +93,7 @@
         <p class="song-title font-bold truncate">{title}</p>
         <p class="artist-name text-sm truncate">{artist}</p>
       </div>
-      <p class="audio-player__time text-sm">
+      <p class="audio-player__time text-sm text-gray-600">
         <span>{format(time)}</span> / <span>{duration ? format(duration):'--:--'}</span>
       </p>
     </div>
@@ -126,6 +126,7 @@
 <style>
   svg path {
     fill: white;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.25));
   }
 
   .audio-player__slider {
@@ -135,7 +136,6 @@
     right: 0;
     height: 0.25rem;
     overflow: hidden;
-    background-color: lime;
   }
 
   .progress {
