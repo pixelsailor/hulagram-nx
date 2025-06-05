@@ -152,8 +152,8 @@
 		<LyricsCard lyrics={currentLyrics} bind:showLyrics />
 	{/if}
 	{#if audioPlayer.src}
-		<div class="audio-player__container relative bg-white" bind:clientHeight={vp.bottomOffset}>
-			<picture class="absolute inset-0 flex h-0 overflow-hidden" style:opacity={opacity} style:height={`${vp.bottomOffset}px`}>
+		<div class="audio-player__container relative bg-white h-22 pt-1 overflow-hidden" bind:clientHeight={vp.bottomOffset}>
+			<picture class="absolute bottom-0 left-0 right-0" style:opacity={opacity} style:height={`${vp.vh}px`}>
 				<source
 					media="(min-width: 650px)"
 					srcset="https://hulagram.local/app/uploads/2025/05/bg-waves__876-216-scaled.webp"
@@ -166,7 +166,7 @@
 					src="https://hulagram.local/app/uploads/2025/05/bg-waves__375-812-216.webp"
 					alt="Overhead view of a shoreline with small waves gently crashing on a beach"
 					role="presentation"
-					class="object-left-bottom object-cover w-full"
+					class="object-left-bottom object-cover w-full h-full"
 				/>
 			</picture>
 			<AudioPlayer {...audioPlayer} bind:paused={audioPlayer.paused} bind:showPlaylist />
