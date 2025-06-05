@@ -17,7 +17,17 @@
     audioPlayer.onSelectSong(song, playlist);
   }
 
+  function downloadTrack(track: { file: string, title: string }) {
+    const link = document.createElement('a');
+    link.href = track.file;
+    link.download = `${track.file}`; // set desired filename
+    link.click();
+    document.body.removeChild(link);
+  }
+
   let vp: { w: () => number, h: () => number, offset: () => number, isDesktop: () => boolean} = getContext('viewport');
+
+  let allowDownloads = $state(false);
 </script>
 
 <article class="card rounded-t-xl shadow grow w-full flex flex-col overflow-hidden" style:background="rgba(255,255,255,0.7)" transition:fly={{y: vp.h()}}>
@@ -41,8 +51,8 @@
           <div class="playlist__track grow basic-[fit-content]">
             <p class="playlist__track__name">{track.title}</p>
           </div>
-          <!-- {#if track.downloadable}
-            <IconButton onclick={() => {}} label="Download">
+          {#if track.downloadable && vp.isDesktop() && allowDownloads}
+            <IconButton onclick={() => downloadTrack(track)} label="Download">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="download-icon" width="100%" height="100%" fill="currentColor">
                 <path d="M12,1C6.878,1,1,2.25,1,12c0,7.71,3.29,11,11,11,5.122,0,11-1.25,11-11,0-7.71-3.29-11-11-11Zm0,21c-7.103,0-10-2.897-10-10S4.897,2,12,2s10,2.897,10,10-2.897,10-10,10Z"/>
                 <g>
@@ -51,7 +61,7 @@
                 </g>
               </svg>
             </IconButton>
-          {/if} -->
+          {/if}
           <!-- {#if audioPlayer.src === track.file}
             <video autoplay loop height="32" width="32">
               <source src={festival} type="video/mp4" />
