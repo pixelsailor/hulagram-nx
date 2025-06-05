@@ -28,18 +28,20 @@
     ></span>
     <span class="sr-only">Resize</span>
   </button>
-  <header class="card__header m-4">
-    <h1 class="playlist__title">{playlist.title}</h1>
-    <p class="playlist__artist">{playlist.artistName}</p>
+  <header class="card__header mx-4 my-2">
+    <h1 class="playlist__title">{@html playlist.title}</h1>
+    <div class="playlist__meta flex h-12 items-center">
+      <p class="playlist__artist text-sm">{@html playlist.artistName}</p>
+    </div>
   </header>
   <main class="playlist__content h-full pb-4 overflow-y-auto overscroll-contain">
     <ul class="playlist__tracks">
       {#each playlist.tracks as track, index}
-        <li class="playlist__track flex items-center py-{LIST_ITEM_PADDING} pl-4 pr-2 gap-1">
+        <li class="playlist__track flex items-center h-14 py-{LIST_ITEM_PADDING} pl-4 pr-2 gap-1">
           <div class="playlist__track grow basic-[fit-content]">
             <p class="playlist__track__name">{track.title}</p>
           </div>
-          {#if track.downloadable}
+          <!-- {#if track.downloadable}
             <IconButton onclick={() => {}} label="Download">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="download-icon" width="100%" height="100%" fill="currentColor">
                 <path d="M12,1C6.878,1,1,2.25,1,12c0,7.71,3.29,11,11,11,5.122,0,11-1.25,11-11,0-7.71-3.29-11-11-11Zm0,21c-7.103,0-10-2.897-10-10S4.897,2,12,2s10,2.897,10,10-2.897,10-10,10Z"/>
@@ -49,7 +51,7 @@
                 </g>
               </svg>
             </IconButton>
-          {/if}
+          {/if} -->
           <!-- {#if audioPlayer.src === track.file}
             <video autoplay loop height="32" width="32">
               <source src={festival} type="video/mp4" />
