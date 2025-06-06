@@ -21,7 +21,7 @@
 
 <ul class="playlist__tracks">
   {#each tracklist as track}
-    <li class="playlist__track flex items-center h-14 py-{LIST_ITEM_PADDING} pl-4 pr-2 gap-1">
+    <li class={[`playlist__track flex items-center h-14 py-${LIST_ITEM_PADDING} pl-4 pr-2 gap-1`, {'desktop-track': isDesktop}]}>
       <div class="playlist__track grow basic-[fit-content]">
         <p class="playlist__track__name">{track.title}</p>
       </div>
@@ -49,4 +49,11 @@
       </IconButton>
     </li>
   {/each}
-  </ul>
+</ul>
+
+<style>
+  .desktop-track {
+    background-color: rgba(255, 255, 255, 0.75);
+    margin: 2px 0;
+  }
+</style>

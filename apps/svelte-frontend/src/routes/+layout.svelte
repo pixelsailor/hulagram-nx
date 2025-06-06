@@ -9,6 +9,7 @@
 	import LyricsCard from './LyricsCard.svelte';
 	import type { Playlist } from './+page';
 	import '../app.css';
+	import { PUBLIC_DOMAIN_DEV } from '$env/static/public';
 
 	const BG_OPACITY = 0.6;
 
@@ -123,15 +124,26 @@
 <main>
 	<picture class="fixed inset-0 flex -z-10" style:opacity={opacity}>
 		<source
+			media={`(min-width: ${MIN_DESKTOP_SIZE}px)`}
+			srcset={`
+				https://${PUBLIC_DOMAIN_DEV}app/uploads/samuel-scrimshaw-fkS-me35j7I-unsplash__2560-1440-144-scaled.webp 2x,
+				https://${PUBLIC_DOMAIN_DEV}app/uploads/samuel-scrimshaw-fkS-me35j7I-unsplash__2560-1440-72.webp 1x
+			`}
+		/>
+		<source
 			media="(min-width: 650px)"
-			srcset="https://hulagram.local/app/uploads/2025/05/bg-waves__876-216-scaled.webp"
+			sizes=""
+			srcset={`
+				https://${PUBLIC_DOMAIN_DEV}app/uploads/2025/05/bg-waves__876-216-scaled.webp 2x,
+				https://${PUBLIC_DOMAIN_DEV}app/uploads/2025/05/bg-waves__876-216.webp,
+			`}
 		/>
 		<source
 			media="(max-width: 649px)"
-			srcset="https://hulagram.local/app/uploads/2025/05/bg-waves__375-812-216.webp"
+			srcset={`https://${PUBLIC_DOMAIN_DEV}app/uploads/2025/05/bg-waves__375-812-216.webp`}
 		/>
 		<img
-			src="https://hulagram.local/app/uploads/2025/05/bg-waves__375-812-216.webp"
+			src={`https://${PUBLIC_DOMAIN_DEV}app/uploads/2025/05/bg-waves__375-812-216.webp`}
 			alt="Overhead view of a shoreline with small waves gently crashing on a beach"
 			role="presentation"
 			class="object-left-bottom object-cover w-full"
@@ -139,6 +151,11 @@
 	</picture>
 	<div class={['main__container pb-16', vp.isDesktop ? 'mx-auto' : 'mx-4']}>
 		{@render children()}
+		{#if showLyrics && currentLyrics && vp.isDesktop}
+			<div class="lyrics-pane">
+				{@html currentLyrics}
+			</div>
+		{/if}
 	</div>
 	<div class="text-xs mx-4 m-1 flex justify-between text-gray-700">
 		<p>&copy; 2006-2025 Randy and Linda Smith</p>
@@ -166,7 +183,7 @@
 			class="object-left-bottom object-cover w-full h-full"
 		/>
 	</picture>
-	{#if vp.vw < MIN_DESKTOP_SIZE}
+	{#if !vp.isDesktop}
 		{#if showPlaylist && selectedPlaylist}
 			<PlaylistCard playlist={selectedPlaylist} bind:showPlaylist />
 		{/if}

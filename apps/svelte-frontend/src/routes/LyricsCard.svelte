@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import { fly } from 'svelte/transition';
-  import type { Playlist } from '$lib/types';
 
   let { lyrics, showLyrics = $bindable() } = $props();
   let vp: { w: () => number, h: () => number, offset: () => number, isDesktop: () => boolean} = getContext('viewport');
