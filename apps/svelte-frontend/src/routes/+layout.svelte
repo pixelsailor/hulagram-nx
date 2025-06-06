@@ -108,6 +108,11 @@
 	});
 </script>
 
+<svelte:head>
+  <title>{`Randy & Linda - ${description}`}</title>
+	<meta name="description" content="Songs of hurt, faith and hope. Original music written and performed by Randy and Linda Smith.">
+</svelte:head>
+
 <svelte:window bind:innerWidth={vp.vw} bind:innerHeight={vp.vh} bind:scrollY={vp.y} />
 
 <header class="h-[50vh] w-full grid grid-flow-row gap-4 lg:h-16 lg:flex lg:justify-between lg:px-6">
@@ -161,11 +166,13 @@
 			class="object-left-bottom object-cover w-full h-full"
 		/>
 	</picture>
-	{#if showPlaylist && selectedPlaylist}
-		<PlaylistCard playlist={selectedPlaylist} bind:showPlaylist />
-	{/if}
-	{#if showLyrics && currentLyrics}
-		<LyricsCard lyrics={currentLyrics} bind:showLyrics />
+	{#if vp.vw < MIN_DESKTOP_SIZE}
+		{#if showPlaylist && selectedPlaylist}
+			<PlaylistCard playlist={selectedPlaylist} bind:showPlaylist />
+		{/if}
+		{#if showLyrics && currentLyrics}
+			<LyricsCard lyrics={currentLyrics} bind:showLyrics />
+		{/if}
 	{/if}
 	{#if audioPlayer.src}
 		<div class="audio-player__container relative h-22 pt-1 overflow-hidden" style:flex="0 0 5.5rem" bind:clientHeight={vp.bottomOffset}>
