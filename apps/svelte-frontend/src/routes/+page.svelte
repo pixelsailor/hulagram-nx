@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
+	import { slide } from 'svelte/transition';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
 	import Tracklist from './Tracklist.svelte';
@@ -10,11 +11,13 @@
 
   let vp: { w: () => number, h: () => number, offset: () => number, isDesktop: () => boolean} = getContext('viewport');
 
+  let playlistId = $derived(page.url.searchParams.get('playlist'));
+
   function selectPlaylist(id: number) {
     const params = new URLSearchParams(window.location.search);
     params.set('playlist', `${id}`);
     goto(`?${params.toString()}`, { keepFocus: true, replaceState: false, noScroll: true });
-    showPlaylistCtx.set(true);
+    if (!vp.isDesktop()) showPlaylistCtx.set(true);
   }
 </script>
 
@@ -27,12 +30,14 @@
             {@html playlist.title}
           </button>
         </div>
-        {#if vp.isDesktop()}
-          <div class="playlist__meta">
-            <p class="playlist__artist">{@html playlist.artistName}</p>
-            <button>Download all</button>
+        {#if vp.isDesktop() && playlistId === `${playlist.databaseId}`}
+          <div transition:slide>
+            <div class="playlist__meta">
+              <p class="playlist__artist">{@html playlist.artistName}</p>
+              <button>Download all</button>
+            </div>
+            <Tracklist playlist={playlist} isDesktop={vp.isDesktop()} />
           </div>
-          <Tracklist playlist={playlist} isDesktop={vp.isDesktop()} />
         {/if}
       </li>
     {/each}
