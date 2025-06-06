@@ -15,6 +15,9 @@
   <span class="icon-button__icon">
     {@render children()}
   </span>
+  {#if props.label}
+    <span class="sr-only">{props.label}</span>
+  {/if}
 </button>
 
 <style>
