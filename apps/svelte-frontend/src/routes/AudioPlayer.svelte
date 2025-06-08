@@ -95,7 +95,7 @@
         <p class="song-title font-bold truncate">{title}</p>
         <p class="artist-name text-sm truncate">{artist}</p>
       </div>
-      <p class="audio-player__time text-sm text-gray-600">
+      <p class="audio-player__time text-sm text-gray-900">
         <span>{format(time)}</span> / <span>{duration ? format(duration):'--:--'}</span>
       </p>
     </div>

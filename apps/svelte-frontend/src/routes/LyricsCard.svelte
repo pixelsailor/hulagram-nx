@@ -3,7 +3,7 @@
 	import { fly } from 'svelte/transition';
 
   let { lyrics, showLyrics = $bindable() } = $props();
-  let vp: { w: () => number, h: () => number, offset: () => number, isDesktop: () => boolean} = getContext('viewport');
+  let vp: { w: () => number, h: () => number, isDesktop: () => boolean} = getContext('viewport');
 </script>
 
 <article

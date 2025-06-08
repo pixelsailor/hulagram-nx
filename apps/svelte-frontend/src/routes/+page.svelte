@@ -9,7 +9,7 @@
 
   let showPlaylistCtx: any = getContext('showPlaylist');
 
-  let vp: { w: () => number, h: () => number, offset: () => number, isDesktop: () => boolean} = getContext('viewport');
+  let vp: { w: () => number, h: () => number, isDesktop: () => boolean } = getContext('viewport');
 
   let playlistId = $derived(page.url.searchParams.get('playlist'));
 
@@ -24,7 +24,7 @@
 <svelte:boundary>
   <ul class="">
     {#each playlists as playlist}
-      <li class="playlist my-12">
+      <li class="playlist py-6">
         <div class="playlist__title">
           <button type="button" class="button" onclick={() => selectPlaylist(playlist.databaseId)}>
             {@html playlist.title}
@@ -32,9 +32,9 @@
         </div>
         {#if vp.isDesktop() && playlistId === `${playlist.databaseId}`}
           <div transition:slide>
-            <div class="playlist__meta">
+            <div class="playlist__meta flex h-14 p-2 items-center justify-between">
               <p class="playlist__artist">{@html playlist.artistName}</p>
-              <button>Download all</button>
+              <!-- <button>Download all</button> -->
             </div>
             <Tracklist playlist={playlist} isDesktop={vp.isDesktop()} />
           </div>

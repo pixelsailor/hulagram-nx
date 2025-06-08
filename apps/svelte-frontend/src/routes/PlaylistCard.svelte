@@ -7,7 +7,7 @@
 
   let { playlist, showPlaylist = $bindable() }: { playlist: Playlist, showPlaylist: boolean } = $props();
 
-  let vp: { w: () => number, h: () => number, offset: () => number, isDesktop: () => boolean} = getContext('viewport');
+  let vp: { w: () => number, h: () => number, isDesktop: () => boolean} = getContext('viewport');
 </script>
 
 <article class="card rounded-t-xl shadow grow w-full flex flex-col overflow-hidden max-w-2xl mx-auto" style:background="rgba(255,255,255,0.7)" transition:fly={{y: vp.h()}}>
