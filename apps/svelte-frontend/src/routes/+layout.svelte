@@ -133,7 +133,12 @@
 
 <div class="site-background fixed inset-0 flex -z-10" style:opacity={opacity}>
 	{#if vp.isDesktop}
-		<video id="site-background__video" class="object-cover w-full h-full" muted autoplay loop disablepictureinpicture disableremoteplayback playsinline>
+		<video
+			poster={`https://${PUBLIC_DOMAIN_DEV}app/uploads/tropical-beach-aerial-loop.webp`}
+			id="site-background__video"
+			class="object-cover w-full h-full"
+			muted autoplay loop disablepictureinpicture disableremoteplayback playsinline
+		>
 			<source
 				src={`https://${PUBLIC_DOMAIN_DEV}app/uploads/tropical-beach-aerial-loop.mp4`}
 				type="video/mp4"
