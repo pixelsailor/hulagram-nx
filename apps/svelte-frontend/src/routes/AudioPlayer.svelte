@@ -1,3 +1,10 @@
+<script module>
+  export let currentSong: { src: string, title: string, artist: string, playlist: any };
+  export function getCurrentSong() {
+    return currentSong;
+  }
+</script>
+
 <script lang="ts">
 	import Toolbar from '$lib/ui/Toolbar.svelte';
 	import IconButton from '$lib/ui/IconButton.svelte';
@@ -53,6 +60,17 @@
     //   showPlaylist = true;
     // }
   }
+
+  $effect(() => {
+    console.log('update currentSong module');
+    
+    currentSong = {
+      src,
+      title,
+      artist,
+      playlist
+    }
+  });
 </script>
 
 <div class={['audio-player relative py-3', { paused }]} bind:clientWidth={playerWidth}>

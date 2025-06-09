@@ -9,3 +9,7 @@
 .playlist__title {
   @apply text-6xl uppercase;
 }
+
+button:hover {
+  cursor: pointer;
+}

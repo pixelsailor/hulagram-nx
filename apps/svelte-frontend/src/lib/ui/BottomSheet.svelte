@@ -37,9 +37,9 @@
     style:background="rgba(255,255,255,0.7)"
     bind:clientWidth={sheetWidth}
   >
-    <button class="card__handle w-full flex-none" style:height={RESIZE_HANDLE_HEIGHT} onclick={handleResizeClick}>
+    <button class="bottomsheet__handle w-full flex-none" style:height={RESIZE_HANDLE_HEIGHT} onclick={handleResizeClick}>
       <span
-        class="card__handle__line block mx-auto bg-black my-2 w-8 h-1 rounded opacity-50 overflow-hidden"
+        class="bottomsheet__handle__line block mx-auto bg-black my-2 w-8 h-1 rounded opacity-50 overflow-hidden"
         role="presentation"
       ></span>
       <span class="sr-only">Resize</span>
