@@ -3,11 +3,12 @@
 	import { setContext } from 'svelte';
 	import { page } from '$app/state';
 
-	import { PUBLIC_DOMAIN_DEV } from '$env/static/public';
 	import { MIN_DESKTOP_SIZE } from '$lib/constants';
+	import { PUBLIC_DOMAIN_DEV } from '$env/static/public';
+	import BottomSheet from '$lib/ui/BottomSheet.svelte';
 	import AudioPlayer from './AudioPlayer.svelte';
-	import PlaylistCard from './PlaylistCard.svelte';
 	import LyricsCard from './LyricsCard.svelte';
+	import PlaylistCard from './PlaylistCard.svelte';
 	import type { Playlist } from './+page';
 	import '../app.css';
 
@@ -111,6 +112,14 @@
 	let playerOffset = $derived(showAudioPlayer ? 88 : 0);
 	let clipTop = $derived(vp.y + headerOffset);
 	let clipBottom = $derived(maskHeight - vp.y - vp.vh + playerOffset);
+
+	function hideBottomSheet() {
+		console.log('+layout handleResizeSheet');
+		
+		showBottomSheet = !showBottomSheet;
+		showPlaylist = false;
+		showLyrics = false;
+	}
 </script>
 
 <svelte:head>
@@ -185,17 +194,19 @@
 </div>
 
 <footer class={[ 
-  'fixed inset-x-0 bottom-0 flex flex-col justify-end overflow-hidden z-50',
+  'fixed inset-x-0 bottom-0 max-h-full flex flex-col justify-end overflow-hidden z-50',
 	showAudioPlayer ? 'audioplayer-open' : 'audioplayer-closed',
 	showBottomSheet ? 'bottomsheet-open' : 'bottomsheet-closed',
 ]}>
 	{#if !vp.isDesktop}
-		{#if showPlaylist && selectedPlaylist}
-			<PlaylistCard playlist={selectedPlaylist} bind:showPlaylist />
-		{/if}
-		{#if showLyrics && currentLyrics}
-			<LyricsCard lyrics={currentLyrics} bind:showLyrics />
-		{/if}
+		<BottomSheet open={showBottomSheet} offset={playerOffset} onClick={hideBottomSheet}>
+			{#if showPlaylist && selectedPlaylist}
+				<PlaylistCard playlist={selectedPlaylist} bind:showPlaylist />
+			{/if}
+			{#if showLyrics && currentLyrics}
+				<LyricsCard lyrics={currentLyrics} bind:showLyrics />
+			{/if}
+		</BottomSheet>
 	{/if}
 	{#if audioPlayer.src}
 		<div class="audio-player__container w-full h-22 pt-1 overflow-hidden" style:flex="0 0 5.5rem">
@@ -213,20 +224,6 @@
 		text-shadow: 1px 1px 2px rgba(255,255,255, 0.3);
 	}
 
-	.bottomsheet-open {
-		top: 0;
-		margin-top: 2rem;
-	}
-
-	/* .audioplayer-closed.bottomsheet-closed {
-		clip-path: inset(100vh 0 0 0);
-	} */
-	
-	/* .audioplayer-open.bottomsheet-open {
-		clip-path: none;
-		pointer-events: initial;
-	} */
-	
 	.audioplayer-open.bottomsheet-closed {
 		height: 5.5rem;
 	}
