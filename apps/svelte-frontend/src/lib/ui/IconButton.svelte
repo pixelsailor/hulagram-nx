@@ -11,6 +11,7 @@
   style={props.style}
   onclick={props.onclick}
   disabled={props.disabled}
+  title={props.title}
 >
   <span class="icon-button__icon">
     {@render children()}

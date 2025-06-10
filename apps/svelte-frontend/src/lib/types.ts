@@ -36,6 +36,7 @@ export type AudioPlayerContext = {
   paused: boolean,
   src: string,
   artist: string,
-  playlist: Playlist,
+  lyrics: string,
+  playlist: string,
   onSelectPlaylist: () => void,
 }

@@ -1,17 +1,17 @@
 <script lang="ts">
 	import '@fontsource/allison';
 	import { setContext } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import { page } from '$app/state';
+	import { PUBLIC_DOMAIN_DEV } from '$env/static/public';
 
 	import { MIN_DESKTOP_SIZE } from '$lib/constants';
-	import { PUBLIC_DOMAIN_DEV } from '$env/static/public';
 	import BottomSheet from '$lib/ui/BottomSheet.svelte';
 	import AudioPlayer from './AudioPlayer.svelte';
 	import LyricsCard from './LyricsCard.svelte';
 	import PlaylistCard from './PlaylistCard.svelte';
 	import type { Playlist } from './+page';
 	import '../app.css';
-	import { fade } from 'svelte/transition';
 
 	const BG_OPACITY = 0.6;
 
@@ -19,11 +19,12 @@
 	const { title, description } = data.response.data.generalSettings;
 	const playlists: Playlist[] = data.response.data.playlists.nodes;
 
-	let lyricsWidth = $state(0);
-
+	setContext('playlists', playlists);
+	
 	let selectedId = $derived(page.url.searchParams.get('playlist'));
 	let selectedPlaylist = $derived(playlists.find((p) => `${p.databaseId}` === selectedId));
-
+	
+	let lyricsWidth = $state(0);
 	let showPlaylist = $state(false);
 	// setContext('playlist', { isVisible: () => showPlaylist, playlist: () => selectedPlaylist, onSelectPlaylist });
 	setContext('showPlaylist', {
@@ -33,36 +34,36 @@
 
 	let audioPlayer = $state({
 		title: '',
-		paused: true,
-		src: '',
 		artist: '',
-		playlist: {},
+		src: '',
+		lyrics: '',
+		playlist: <Playlist>{},
+		paused: true,
 		onSelectSong
 	});
 	setContext('audioPlayer', () => audioPlayer);
 
-	let showLyrics = $state(false);
-	let currentLyrics = $derived(
-		audioPlayer.src
-			? playlists
-					.find((p) => p.databaseId === selectedPlaylist?.databaseId)
-					?.tracks.find((t) => t.file === audioPlayer.src)?.lyrics
-			: ''
-	);
+	function onSelectSong(file: string, playlistId: number) {
+    const album = playlists.find((_) => _.databaseId === playlistId);
+    const song = album?.tracks.find((track) => track.file === file);
 
-	let showBottomSheet = $derived(showPlaylist || showLyrics);
-	let showAudioPlayer = $derived(audioPlayer.src);
-
-	function onSelectSong(song: { artist: string; file: string; title: string }, playlist: Playlist) {
+    if (!song) throw new Error("A playlist with that song file could not be found.");
+    
 		audioPlayer = {
 			artist: song.artist,
 			src: song.file,
 			title: song.title,
+      lyrics: song.lyrics,
 			paused: false,
-			playlist: selectedPlaylist!,
+			playlist: album!,
 			onSelectSong
 		};
 	}
+
+	let showLyrics = $state(false);
+	
+	let showBottomSheet = $derived(showPlaylist || showLyrics);
+	let showAudioPlayer = $derived(audioPlayer.src);
 
 	class Viewport {
 		#vh = $state(0);						// viewport height
@@ -127,8 +128,6 @@
 	let clipBottom = $derived(maskHeight - vp.y - vp.vh + playerOffset);
 
 	function hideBottomSheet() {
-		console.log('+layout handleResizeSheet');
-
 		showBottomSheet = !showBottomSheet;
 		showPlaylist = false;
 		showLyrics = false;
@@ -214,11 +213,11 @@
 			</div>
 			{#if vp.isDesktop}
 				<div class="desktop-lyrics-container display-none lg:relative max-w-1/2 basis-1/2 shrink" bind:clientWidth={lyricsWidth}>
-					{#if showLyrics && currentLyrics}
+					{#if showLyrics && audioPlayer.lyrics}
 						<div class="desktop-lyrics__content rounded-sm p-4 fixed" style:width="{lyricsWidth}px" style:background-color="rgba(255, 255, 255, 0.4)" transition:fade>
 							<h1 class="text-xl font-bold">{@html audioPlayer.title}</h1>
 							<p class="mb-4 text-sm">Written by {audioPlayer.artist}</p>
-							<pre class="font-sans whitespace-pre-wrap">{currentLyrics}</pre>
+							<pre class="font-sans whitespace-pre-wrap">{audioPlayer.lyrics}</pre>
 						</div>
 					{/if}
 				</div>
@@ -243,14 +242,14 @@
 			{#if showPlaylist && selectedPlaylist}
 				<PlaylistCard playlist={selectedPlaylist} bind:showPlaylist />
 			{/if}
-			{#if showLyrics && currentLyrics}
-				<LyricsCard lyrics={currentLyrics} bind:showLyrics />
+			{#if showLyrics && audioPlayer.lyrics}
+				<LyricsCard lyrics={audioPlayer.lyrics} bind:showLyrics />
 			{/if}
 		</BottomSheet>
 	{/if}
 	{#if audioPlayer.src}
 		<div class="audio-player__container h-22 w-full overflow-hidden pt-1" style:flex="0 0 5.5rem">
-			<AudioPlayer {...audioPlayer} bind:paused={audioPlayer.paused} bind:showPlaylist />
+			<AudioPlayer bind:paused={audioPlayer.paused} bind:showPlaylist />
 		</div>
 	{/if}
 </footer>

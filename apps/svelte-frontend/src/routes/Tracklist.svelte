@@ -6,18 +6,16 @@
 
 	let { playlist, isDesktop }: { playlist: Playlist; isDesktop: boolean } = $props();
 
-	let tracklist = $derived(playlist.tracks);
-
 	const getAudioPlayer: any = getContext('audioPlayer');
 	const audioPlayer = getAudioPlayer();
+  
+	let tracklist = $derived(playlist.tracks);
 
 	let allowDownloads = $state(false);
 
-	function selectSongHandler(song: any) {
-		audioPlayer.onSelectSong(song, playlist);
+	function selectSongHandler(file: string) {
+		audioPlayer.onSelectSong(file, playlist.databaseId);
 	}
-
-	$inspect(audioPlayer);
 </script>
 
 <ul class="playlist__tracks">
@@ -56,7 +54,7 @@
 				</IconButton>
 			{/if}
 			{#if audioPlayer.src !== track.file}
-				<IconButton onclick={() => selectSongHandler(track)} label="Play">
+				<IconButton onclick={() => selectSongHandler(track.file)} label="Play" class="-mr-2 lg:mr-0">
 					<svg
 						class="play-icon"
 						viewBox="0 0 24 24"
