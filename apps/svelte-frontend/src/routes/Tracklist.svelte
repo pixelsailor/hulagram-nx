@@ -7,7 +7,7 @@
 	let { playlist, isDesktop }: { playlist: Playlist; isDesktop: boolean } = $props();
 
 	const getAudioPlayer: any = getContext('audioPlayer');
-	const audioPlayer = getAudioPlayer();
+	let audioPlayer = $derived(getAudioPlayer());
   
 	let tracklist = $derived(playlist.tracks);
 
@@ -53,7 +53,24 @@
 					</svg>
 				</IconButton>
 			{/if}
-			{#if audioPlayer.src !== track.file}
+			{#if audioPlayer.trackId === track.id}
+				<div class="equalizer-icon__container -mr-1 flex h-10 w-10 items-center justify-center">
+					<div class="equalizer-icon relative" style="width: 14px; height: 14px;">
+						<div
+							class="equalizer-icon__bar origin-bottom transition-transform"
+							style="left: 0px; transition-duration: 393.931ms; transform: scaleY(0.907575);"
+						></div>
+						<div
+							class="equalizer-icon__bar origin-bottom transition-transform"
+							style="left: 5px; transition-duration: 469.32ms; transform: scaleY(0.421268);"
+						></div>
+						<div
+							class="equalizer-icon__bar origin-bottom transition-transform"
+							style="left: 10px; transition-duration: 324.281ms; transform: scaleY(0.50507);"
+						></div>
+					</div>
+				</div>
+			{:else}
 				<IconButton onclick={() => selectSongHandler(track.file)} label="Play" class="-mr-2 lg:mr-0">
 					<svg
 						class="play-icon"
@@ -68,23 +85,6 @@
 						/>
 					</svg>
 				</IconButton>
-			{:else}
-				<div class="equalizer-icon__container m-1 flex h-10 w-10 items-center justify-center">
-					<div class="equalizer-icon relative" style="width: 14px; height: 14px;">
-						<div
-							class="equalizer-icon__bar origin-bottom transition-transform"
-							style="left: 0px; width: 3px; transition-duration: 393.931ms; transform: scaleY(0.907575);"
-						></div>
-						<div
-							class="equalizer-icon__bar origin-bottom transition-transform"
-							style="left: 5px; width: 3px; transition-duration: 469.32ms; transform: scaleY(0.421268);"
-						></div>
-						<div
-							class="equalizer-icon__bar origin-bottom transition-transform"
-							style="left: 10px; width: 3px; transition-duration: 324.281ms; transform: scaleY(0.50507);"
-						></div>
-					</div>
-				</div>
 			{/if}
 		</li>
 	{/each}
@@ -98,9 +98,42 @@
 	.desktop-track:hover {
 		background-color: rgba(255, 255, 255, 0.4);
 	}
-	.equalizer-icon__bar {
-		position: absolute;
-		height: 100%;
-		background-color: black;
-	}
+
+  @keyframes equalizer-bar-1 {
+    0% { transform: scaleY(0.2); }
+    50% { transform: scaleY(1); }
+    100% { transform: scaleY(0.4); }
+  }
+
+  @keyframes equalizer-bar-2 {
+    0% { transform: scaleY(0.3); }
+    50% { transform: scaleY(0.8); }
+    100% { transform: scaleY(0.5); }
+  }
+
+  @keyframes equalizer-bar-3 {
+    0% { transform: scaleY(0.4); }
+    50% { transform: scaleY(1); }
+    100% { transform: scaleY(0.2); }
+  }
+
+  .equalizer-icon__bar {
+    position: absolute;
+    height: 100%;
+    width: 3px;
+    background-color: black;
+    transform-origin: bottom;
+  }
+
+  .equalizer-icon__bar:nth-child(1) {
+    animation: equalizer-bar-1 500ms ease-in-out infinite;
+  }
+
+  .equalizer-icon__bar:nth-child(2) {
+    animation: equalizer-bar-2 700ms ease-in-out infinite;
+  }
+
+  .equalizer-icon__bar:nth-child(3) {
+    animation: equalizer-bar-3 600ms ease-in-out infinite;
+  }
 </style>

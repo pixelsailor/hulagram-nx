@@ -26,7 +26,7 @@
 	
 	let lyricsWidth = $state(0);
 	let showPlaylist = $state(false);
-	// setContext('playlist', { isVisible: () => showPlaylist, playlist: () => selectedPlaylist, onSelectPlaylist });
+	
 	setContext('showPlaylist', {
 		get: () => (selectedPlaylist ? showPlaylist : false),
 		set: (val: boolean) => (showPlaylist = val)
@@ -36,6 +36,7 @@
 		title: '',
 		artist: '',
 		src: '',
+		trackId: '',
 		lyrics: '',
 		playlist: <Playlist>{},
 		paused: true,
@@ -48,10 +49,11 @@
     const song = album?.tracks.find((track) => track.file === file);
 
     if (!song) throw new Error("A playlist with that song file could not be found.");
-    
+
 		audioPlayer = {
 			artist: song.artist,
 			src: song.file,
+			trackId: song.id,
 			title: song.title,
       lyrics: song.lyrics,
 			paused: false,
