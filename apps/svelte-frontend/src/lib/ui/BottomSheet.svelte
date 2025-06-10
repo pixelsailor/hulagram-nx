@@ -18,9 +18,8 @@
 </script>
 
 <div
-  class={['bottomsheet__wrapper flex w-full']}
-  style="--inset: {xInset}px; --offset: {offset}"
-  style:max-height={open ? `calc(100vh - ${offset}px - 2rem` : '0'}
+  class={['bottomsheet__wrapper flex w-full', open ? 'bottomsheet__wrapper--open' :  'max-h-0']}
+  style="--inset: {xInset}px; --offset: {offset}px"
   bind:clientWidth={screenWidth}
   transition:slide
 >
@@ -33,7 +32,7 @@
     >
   </picture>
   <div
-    class={['bottomsheet flex flex-col w-full max-w-2xl mx-auto overflow-hidden rounded-t-lg shadow-md', {'': open}]}
+    class={['bottomsheet flex flex-col w-full max-w-2xl mx-auto overflow-hidden rounded-t-lg shadow-md', {'bottomsheet--open': open}]}
     style:background="rgba(255,255,255,0.7)"
     bind:clientWidth={sheetWidth}
   >
@@ -53,7 +52,6 @@
 
 <style>
   .bottomsheet__wrapper {
-    /* flex: 1 1 100vh; */
     clip-path: inset(0 var(--inset));
   }
   .bottomsheet__wrapper--open {
