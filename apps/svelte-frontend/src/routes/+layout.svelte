@@ -134,6 +134,15 @@
 		showPlaylist = false;
 		showLyrics = false;
 	}
+
+	function handleKeyDown(event: KeyboardEvent) {
+		if (event.code === 'Space') {
+			event.preventDefault();
+			if (audioPlayer.src) {
+				audioPlayer.paused = !audioPlayer.paused; 
+			}
+		}
+	}
 </script>
 
 <svelte:head>
@@ -144,7 +153,7 @@
 	/>
 </svelte:head>
 
-<svelte:window bind:innerWidth={vp.vw} bind:innerHeight={vp.vh} bind:scrollY={vp.y} />
+<svelte:window bind:innerWidth={vp.vw} bind:innerHeight={vp.vh} bind:scrollY={vp.y} onkeydown="{handleKeyDown}" />
 
 {#snippet header()}
 	<header
