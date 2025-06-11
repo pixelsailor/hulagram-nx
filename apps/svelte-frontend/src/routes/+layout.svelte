@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '@fontsource/allison';
-	import { setContext } from 'svelte';
+	import { onMount, setContext } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { page } from '$app/state';
 	import { PUBLIC_DOMAIN_DEV } from '$env/static/public';
@@ -20,13 +20,13 @@
 	const playlists: Playlist[] = data.response.data.playlists.nodes;
 
 	setContext('playlists', playlists);
-	
+
 	let selectedId = $derived(page.url.searchParams.get('playlist'));
 	let selectedPlaylist = $derived(playlists.find((p) => `${p.databaseId}` === selectedId));
 	
 	let lyricsWidth = $state(0);
 	let showPlaylist = $state(false);
-	
+
 	setContext('showPlaylist', {
 		get: () => (selectedPlaylist ? showPlaylist : false),
 		set: (val: boolean) => (showPlaylist = val)
@@ -162,7 +162,7 @@
 	{@render header()}
 {/if}
 
-<div class="site-background fixed inset-0 -z-10 flex" style:opacity>
+<div class="site-background fixed inset-0 -z-10 flex" style:opacity={vp.isDesktop ? '1' : opacity}>
 	{#if vp.isDesktop}
 		<video
 			poster={`https://${PUBLIC_DOMAIN_DEV}app/uploads/tropical-beach-aerial-loop.webp`}
@@ -181,6 +181,14 @@
 				role="presentation"
 			/>
 		</video>
+		<!-- <picture class="fixed inset-0 flex">
+			<img
+				src={`https://${PUBLIC_DOMAIN_DEV}app/uploads/2025/05/bg-waves__375-812-216.webp`}
+				alt="Overhead view of a shoreline with small waves gently crashing on a beach"
+				role="presentation"
+				class="w-full object-cover object-left-bottom hidden"
+			/>
+		</picture> -->
 	{:else}
 		<picture class="fixed inset-0 flex">
 			<source
@@ -216,7 +224,7 @@
 			{#if vp.isDesktop}
 				<div class="desktop-lyrics-container display-none lg:relative max-w-1/2 basis-1/2 shrink" bind:clientWidth={lyricsWidth}>
 					{#if showLyrics && audioPlayer.lyrics}
-						<div class="desktop-lyrics__content rounded-sm p-4 fixed" style:width="{lyricsWidth}px" style:background-color="rgba(255, 255, 255, 0.4)" transition:fade>
+						<div class="desktop-lyrics__content rounded-sm p-4 fixed backdrop-blur-sm" style:width="{lyricsWidth}px" style:background-color="rgba(255, 255, 255, 0.4)" transition:fade>
 							<h1 class="text-xl font-bold">{@html audioPlayer.title}</h1>
 							<p class="mb-4 text-sm">Written by {audioPlayer.artist}</p>
 							<pre class="font-sans whitespace-pre-wrap">{audioPlayer.lyrics}</pre>

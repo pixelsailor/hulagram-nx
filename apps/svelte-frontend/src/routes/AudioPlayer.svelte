@@ -94,7 +94,7 @@
 		></div>
 	</div>
 	<Toolbar>
-		<div class="audio-player__info w-full flex-auto overflow-hidden">
+		<div class="audio-player__info w-full flex-auto overflow-hidden lg:w-1/2">
 			<div class="audio-player__description w-full">
 				<p class="song-title truncate font-bold">{title}</p>
 				<p class="truncate text-sm">
@@ -106,7 +106,7 @@
 				<span>{format(time)}</span> / <span>{duration ? format(duration) : '--:--'}</span>
 			</p>
 		</div>
-		<div class="flex flex-row flex-nowrap">
+		<div class="flex flex-row flex-nowrap lg:w-1/2 lg:basis-1/2 grow-0 lg:shrink lg:justify-between">
 			<div class="flex flex-row flex-nowrap">
 				<IconButton onclick={() => (paused = !paused)} title={paused ? 'Play' : 'Pause'}>
 					{#if paused}
