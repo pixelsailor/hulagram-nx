@@ -22,7 +22,7 @@
 	{#each tracklist as track}
 		<li
 			class={[
-				`playlist__track flex h-14 items-center py-${LIST_ITEM_PADDING} lg:gap-1 lg:rounded-sm lg:pr-2 lg:pl-4`,
+				`playlist__track flex h-14 items-center py-${LIST_ITEM_PADDING} lg:gap-1 lg:rounded-sm lg:pr-2 lg:pl-4 lg:backdrop-blur-sm`,
 				{ 'desktop-track': isDesktop }
 			]}
 		>
@@ -54,7 +54,7 @@
 				</IconButton>
 			{/if}
 			{#if audioPlayer.trackId === track.id}
-				<div class="equalizer-icon__container -mr-1 flex h-10 w-10 items-center justify-center">
+				<div class="equalizer-icon__container -mr-1 lg:mr-1 flex h-10 w-10 items-center justify-center">
 					<div class="equalizer-icon relative" style="width: 14px; height: 14px;">
 						<div
 							class="equalizer-icon__bar origin-bottom transition-transform"
