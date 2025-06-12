@@ -5,16 +5,25 @@ import { repeat } from 'lit/directives/repeat.js';
 import { v4 as uuid } from 'uuid';
 
 class CxiiPlaylist extends LitElement {
+  static styles = css`
+    .cxii-playlists__track__container {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  `;
   static properties = {
     artistName: {},
     releaseDate: {},
     tracks: { type: Array },
+    archive: {},
   }
   constructor() {
     super();
     this.artistName = '';
     this.releaseDate = '';
     this.tracks = [];
+    this.archive = '';
   }
 
   // Need to render to the Light DOM to make input values accessible to PHP parent
@@ -42,6 +51,22 @@ class CxiiPlaylist extends LitElement {
               <input type="date" id="cxii_release_date" class="regular-text" name="cxii_release_date" .value="${this.releaseDate}" />
             </td>
           </tr>
+          <tr>
+            <th scope="row">
+              <label for="cxii_playlist_archive">Downloadable archive</label>
+            </th>
+            <td>
+              <input
+                type="text"
+                class="cxii__track__file regular-text"
+                name="cxii_playlist_archive"
+                .value="${this.archive || ''}"
+                @click=${() => !this.archive ? this._openArchiveBrowser() : null}
+                readonly
+              />
+              <button type="button" class="button select-media" @click=${() => this._openArchiveBrowser()}>Select file</button>
+            </td>
+          </tr>
           ${this.tracks.length
             ? html`
               ${repeat(
@@ -49,69 +74,69 @@ class CxiiPlaylist extends LitElement {
                 (track) => track.id,
                 (track, index) => html`
                   <tr>
-                    <td>
+                    <td style="border-bottom: 1px solid #999;">
                       <span>${index + 1}.</span>
                     </td>
-                    <td>
-                      <div>
-                        <label>
-                          <span class="title">Song file</span>
-                          <input
-                            type="text"
-                            class="cxii__track__file
-                            regular-text"
-                            .value="${track.file || ''}"
-                            @click=${() => !track.file ? this._openMediaBrowser(index) : null}
-                            readonly
-                          />
-                        </label>
-                        <button type="button" class="button select-media" @click=${() => this._openMediaBrowser(index)}>Select file</button>
-                      </div>
-                      <div>
-                        <label>
-                          <span class="title">Track title</span>
-                          <input
-                            type="text"
-                            class="cxii__track__title regular-text"
-                            .value="${track.title || ''}"
-                            @input=${(e) => this._handleInputChange(e, index, 'title')}
-                          />
-                        </label>
-                      </div>
-                      <div>
-                        <label>
-                          <span class="title">Artist</span>
-                          <input
-                            type="text"
-                            class="cxii__track__artist regular-text"
-                            .value="${track.artist || ''}"
-                            @input=${(e) => this._handleInputChange(e, index, 'artist')}
-                          />
-                        </label>
-                      </div>
-                      <div>
-                        <label>
-                          <span class="title">Lyrics</span>
+                    <td style="border-bottom: 1px solid #999;">
+                      <div
+                        class="cxii-playlists__track__container"
+                        style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem;"
+                      >
+                        <div class="cxii-playlists__track__meta">
+                          <div class="cxii__form-field" style="margin: 1rem 0">
+                            <label class="title cxii__form-field__label" style="padding-bottom: 0.25rem; display: block">Song file</label>
+                            <input
+                              type="text"
+                              class="cxii__track__file regular-text"
+                              .value="${track.file || ''}"
+                              @click=${() => !track.file ? this._openMediaBrowser(index) : null}
+                              readonly
+                            />
+                            <button type="button" class="button select-media" @click=${() => this._openMediaBrowser(index)}>Select file</button>
+                          </div>
+                          <div class="cxii__form-field" style="margin: 1rem 0">
+                            <label class="cxii__form-field__label title" style="padding-bottom: 0.25rem; display: block">Track title</label>
+                            <input
+                              type="text"
+                              class="cxii__track__title regular-text form-field__text"
+                              .value="${track.title || ''}"
+                              @input=${(e) => this._handleInputChange(e, index, 'title')}
+                            />
+                          </div>
+                          <div class="cxii__form-field" style="margin: 1rem 0">
+                            <label class="title cxii__form-field__label" style="padding-bottom: 0.25rem; display: block">Written by</label>
+                            <input
+                              type="text"
+                              class="cxii__track__artist regular-text form-field__text"
+                              .value="${track.artist || ''}"
+                              @input=${(e) => this._handleInputChange(e, index, 'artist')}
+                            />
+                          </div>
+                          <div class="cxii__form-field" style="margin: 1rem 0">
+                            <label>
+                              <input
+                                type="checkbox"
+                                class="cxii__track__downloadable form-field__checkbox"
+                                ?checked=${track.downloadable}
+                                @click=${(e) => this._handleInputChange(e, index, 'downloadable')}
+                              />
+                              <span class="checkbox-title">Downloadable</span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="track__lyrics cxii__form-field" style="margin: 1rem 0">
+                          <label class="title cxii__form-field__label" style="padding-bottom: 0.25rem; display: block">Lyrics</label>
                           <textarea
-                            class="cxii__track__lyrics regular-text"
-                            rows="5"
+                            class="cxii__track__lyrics regular-text form-field__textarea"
+                            style="display: block; width: 100%"
+                            rows="8"
                             .value="${track.lyrics || ''}"
                             @change=${(e) => this._handleInputChange(e, index, 'lyrics')}
                           ></textarea>
+                        </div>
                       </div>
                       <div>
-                        <label>
-                          <input
-                            type="checkbox"
-                            class="cxii__track__downloadable"
-                            ?checked=${track.downloadable}
-                            @click=${(e) => this._handleInputChange(e, index, 'downloadable')}
-                          />
-                          <span class="checkbox-title">Downloadable</span>
-                        </label>
-                      </div>
-                      <div>
-                        <button type="button" class="button" @click=${() => this._removeTrackHandler(index)}>Remove track</button>
+                        <button type="button form-field__button" class="button" @click=${() => this._removeTrackHandler(index)}>Remove track</button>
                       </div>
                     <td>
                   </tr>
@@ -122,8 +147,10 @@ class CxiiPlaylist extends LitElement {
           }
         </tbody>
       </table>
-      <button type="button" class="button" @click=${this._addTrackHandler}>Add track</button>
-      <input type="hidden" name="cxii_tracks_json" .value="${JSON.stringify(this.tracks)}" />
+      <div style="margin: 1rem 0">
+        <input type="hidden" name="cxii_tracks_json" .value="${JSON.stringify(this.tracks)}" />
+        <button type="button" class="button" @click=${this._addTrackHandler}>Add track</button>
+      </div>
     `;
   }
 
@@ -153,6 +180,22 @@ class CxiiPlaylist extends LitElement {
       _.index = i;
     });
     this.tracks = tracks;
+  }
+
+  _openArchiveBrowser(index) {
+    const frame = window.wp.media({
+      title: 'Select a zip archive',
+      button: { text: 'Use this file' },
+      multiple: false,
+      library: { type: 'application/zip' }
+    });
+
+    frame.on('select', () => {
+      const attachment = frame.state().get('selection').first().toJSON();
+      this.archive = attachment.url;
+    });
+
+    frame.open();
   }
 
   /**

@@ -1,0 +1,1 @@
+Run `pnpm vite build` from this directory after saving changes to build in the WP Plugins directory
