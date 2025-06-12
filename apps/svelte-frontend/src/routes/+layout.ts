@@ -1,28 +1,21 @@
-const path = import.meta.env.VITE_GRAPHQL_API as string;
-// const uploads = import.meta.env.VITE_GRAPHQL_API as string;
+import { dev } from '$app/environment';
+import { PUBLIC_DEV_API, PUBLIC_PROD_API } from '$env/static/public';
 
-// import type { RequestHandler } from '@sveltejs/kit';
 import type { LayoutLoad } from './$types';
-// import graphql from '$lib/graphql';
 
 export type GeneralSettings = {
-  data: {
-    generalSettings: {
-      title: string;
-      description: string;
-    }
-  }
-}
+	data: {
+		generalSettings: {
+			title: string;
+			description: string;
+		};
+	};
+};
+
+const path = dev ? PUBLIC_DEV_API : PUBLIC_PROD_API;
 
 export const load: LayoutLoad = async ({ fetch }) => {
-  // const query = `{
-  //   generalSettings {
-  //     title
-  //     description
-  //   }
-  // }`;
-
-  const query = `{
+	const query = `{
     generalSettings {
       title
       description
@@ -45,25 +38,13 @@ export const load: LayoutLoad = async ({ fetch }) => {
     }
   }`;
 
-  const res = await fetch(path, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ query }),
-  });
-  // const layout: GeneralSettings = await res.json();
-  // return {layout};
-  const response = await res.json();
-  return {response};
-}
-
-// export const GET: RequestHandler = ({ params, url }) => {
-//   return fetch(`${uploads}/${params.path + url.search}`, {
-//     method: 'GET',
-//     headers: {
-//       "Access-Control-Allow-Origin": "*",
-//       "Content-Disposition": "attachment; filename=*.mp3" 
-//     }
-//   });
-// }
+	const res = await fetch(path, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ query })
+	});
+	const response = await res.json();
+	return { response };
+};

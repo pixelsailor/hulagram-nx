@@ -13,6 +13,8 @@ export type Playlist = {
   date: string;
   title: string;
   artistName: string;
+  releaseDate: string;
+  archive: string;
   tracks: [Track]
 }
 

@@ -2,8 +2,9 @@
 	import '@fontsource/allison';
 	import { onMount, setContext } from 'svelte';
 	import { fade } from 'svelte/transition';
+	import { dev } from '$app/environment';
 	import { page } from '$app/state';
-	import { PUBLIC_DOMAIN_DEV } from '$env/static/public';
+	import { PUBLIC_DEV_MEDIA_URL, PUBLIC_PROD_MEDIA_URL } from '$env/static/public';
 
 	import { MIN_DESKTOP_SIZE } from '$lib/constants';
 	import BottomSheet from '$lib/ui/BottomSheet.svelte';
@@ -13,6 +14,7 @@
 	import type { Playlist } from './+page';
 	import '../app.css';
 
+	const WP_UPLOADS = dev ? PUBLIC_DEV_MEDIA_URL : PUBLIC_PROD_MEDIA_URL;
 	const BG_OPACITY = 0.6;
 
 	let { children, data } = $props();
@@ -175,7 +177,7 @@
 <div class="site-background fixed inset-0 -z-10 flex" style:opacity={vp.isDesktop ? '1' : opacity}>
 	{#if vp.isDesktop}
 		<video
-			poster={`https://${PUBLIC_DOMAIN_DEV}app/uploads/tropical-beach-aerial-loop.webp`}
+			poster={`${WP_UPLOADS}/tropical-beach-aerial-loop.webp`}
 			id="site-background__video"
 			class="h-full w-full object-cover"
 			muted
@@ -186,14 +188,14 @@
 			playsinline
 		>
 			<source
-				src={`https://${PUBLIC_DOMAIN_DEV}app/uploads/tropical-beach-aerial-loop.mp4`}
+				src={`${WP_UPLOADS}/tropical-beach-aerial-loop.mp4`}
 				type="video/mp4"
 				role="presentation"
 			/>
 		</video>
 		<!-- <picture class="fixed inset-0 flex">
 			<img
-				src={`https://${PUBLIC_DOMAIN_DEV}app/uploads/2025/05/bg-waves__375-812-216.webp`}
+				src={`${WP_UPLOADS}/2025/05/bg-waves__375-812-216.webp`}
 				alt="Overhead view of a shoreline with small waves gently crashing on a beach"
 				role="presentation"
 				class="w-full object-cover object-left-bottom hidden"
@@ -204,12 +206,13 @@
 			<source
 				media="(min-width: 650px;)"
 				srcset={`
-					https://${PUBLIC_DOMAIN_DEV}app/uploads/bg-waves__876-216.webp,
+					${WP_UPLOADS}/bg-waves__876-216.webp 2x,
+					${WP_UPLOADS}/bg-waves__876-96.webp,
 				`}
 			/>
 			<img
-				src={`https://${PUBLIC_DOMAIN_DEV}app/uploads/bg-waves__375-812-96.webp`}
-				srcset={`https://${PUBLIC_DOMAIN_DEV}app/uploads/bg-waves__375-812-216.webp 2x`}
+				src={`${WP_UPLOADS}/bg-waves__375-812-96.webp`}
+				srcset={`${WP_UPLOADS}/bg-waves__375-812-216.webp 2x`}
 				alt="Overhead view of a shoreline with small waves gently crashing on a beach"
 				role="presentation"
 				class="w-full object-cover object-left-bottom"

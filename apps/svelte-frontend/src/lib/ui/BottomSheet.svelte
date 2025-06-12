@@ -1,9 +1,9 @@
 <script lang="ts">
   import { dev } from '$app/environment';
-	import { PUBLIC_DOMAIN_DEV, PUBLIC_DOMAIN_PROD } from '$env/static/public';
+	import { PUBLIC_DEV_MEDIA_URL, PUBLIC_PROD_MEDIA_URL } from '$env/static/public';
 	import { slide } from 'svelte/transition';
 
-  const DOMAIN = dev ? PUBLIC_DOMAIN_DEV : PUBLIC_DOMAIN_PROD;
+  const WP_UPLOADS = dev ? PUBLIC_DEV_MEDIA_URL : PUBLIC_PROD_MEDIA_URL;
   const RESIZE_HANDLE_HEIGHT = '40px';
   
   let { open, offset = 0, onClick, children }: { open: boolean, offset: number, onClick: () => void, children: any } = $props();
@@ -33,8 +33,8 @@
 >
   <picture class="bottomsheet__bg-img absolute inset-0 -z-1 overflow-hidden">
     <img
-      src={`https://${DOMAIN}app/uploads/bg-waves__375-812-96.webp`}
-      srcset={`https://${DOMAIN}app/uploads/bg-waves__375-812-216.webp 2x`}
+      src={`${WP_UPLOADS}/bg-waves__375-812-96.webp`}
+      srcset={`${WP_UPLOADS}/bg-waves__375-812-216.webp 2x`}
       alt="Aerial view of a beach with small waves gently crashing on shore"
       role="presentation"
       class="object-left-bottom object-cover w-full h-full"
