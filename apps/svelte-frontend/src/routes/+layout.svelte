@@ -162,7 +162,8 @@
 	>
 		<h1 class="allison self-end text-center text-7xl lg:self-center lg:text-4xl">{@html title}</h1>
 		<h2 class="allison self-start text-center text-5xl lg:self-center lg:text-4xl">
-			{@html description}
+			<span class="hidden lg:inline">{@html description}</span>
+			<span class="lg:hidden">Songs of Hope</span>
 		</h2>
 	</header>
 {/snippet}
@@ -203,11 +204,12 @@
 			<source
 				media="(min-width: 650px;)"
 				srcset={`
-					https://${PUBLIC_DOMAIN_DEV}app/uploads/2025/05/bg-waves__876-216.webp,
+					https://${PUBLIC_DOMAIN_DEV}app/uploads/bg-waves__876-216.webp,
 				`}
 			/>
 			<img
-				src={`https://${PUBLIC_DOMAIN_DEV}app/uploads/2025/05/bg-waves__375-812-216.webp`}
+				src={`https://${PUBLIC_DOMAIN_DEV}app/uploads/bg-waves__375-812-96.webp`}
+				srcset={`https://${PUBLIC_DOMAIN_DEV}app/uploads/bg-waves__375-812-216.webp 2x`}
 				alt="Overhead view of a shoreline with small waves gently crashing on a beach"
 				role="presentation"
 				class="w-full object-cover object-left-bottom"

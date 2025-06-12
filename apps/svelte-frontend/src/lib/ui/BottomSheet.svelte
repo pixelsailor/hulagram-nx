@@ -15,17 +15,26 @@
   function handleResizeClick() {
     onClick();
   }
+
+  function handleDragStart(event: Event) {
+    console.log('handleDragStart');
+  }
+  
+  function handleDragEnd(event: DragEvent) {
+    console.log('handleDragEnd');
+  }
 </script>
 
 <div
-  class={['bottomsheet__wrapper flex w-full', open ? 'bottomsheet__wrapper--open' :  'max-h-0']}
+  class={['bottomsheet__wrapper flex w-full', open ? 'bottomsheet__wrapper--open' : 'max-h-0']}
   style="--inset: {xInset}px; --offset: {offset}px"
   bind:clientWidth={screenWidth}
   transition:slide
 >
   <picture class="bottomsheet__bg-img absolute inset-0 -z-1 overflow-hidden">
     <img
-      src={`https://${DOMAIN}app/uploads/2025/05/bg-waves__375-812-216.webp`}
+      src={`https://${DOMAIN}app/uploads/bg-waves__375-812-96.webp`}
+      srcset={`https://${DOMAIN}app/uploads/bg-waves__375-812-216.webp 2x`}
       alt="Aerial view of a beach with small waves gently crashing on shore"
       role="presentation"
       class="object-left-bottom object-cover w-full h-full"
@@ -36,7 +45,7 @@
     style:background="rgba(255,255,255,0.7)"
     bind:clientWidth={sheetWidth}
   >
-    <button class="bottomsheet__handle w-full flex-none" style:height={RESIZE_HANDLE_HEIGHT} onclick={handleResizeClick}>
+    <button class="bottomsheet__handle w-full flex-none" style:height={RESIZE_HANDLE_HEIGHT} onclick={handleResizeClick} ondragstart={handleDragStart}>
       <span
         class="bottomsheet__handle__line block mx-auto bg-black my-2 w-8 h-1 rounded opacity-50 overflow-hidden"
         role="presentation"
