@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { BUTTON_MIN_TARGET_HEIGHT } from "$lib/constants";
 
-  let { children, ...props } = $props();
+  let { onClick, children, ...props } = $props();
 </script>
 
 <button
@@ -9,7 +9,7 @@
   style:min-width={`${BUTTON_MIN_TARGET_HEIGHT / 4}rem`}
   style:height={`${BUTTON_MIN_TARGET_HEIGHT / 4}rem`}
   style={props.style}
-  onclick={props.onclick}
+  onclick={onClick}
   disabled={props.disabled}
   title={props.title}
 >

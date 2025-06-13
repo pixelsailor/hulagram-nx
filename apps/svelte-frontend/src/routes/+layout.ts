@@ -1,5 +1,6 @@
 import { dev } from '$app/environment';
 import { PUBLIC_DEV_API, PUBLIC_PROD_API } from '$env/static/public';
+import { error } from '@sveltejs/kit';
 
 import type { LayoutLoad } from './$types';
 
@@ -26,6 +27,8 @@ export const load: LayoutLoad = async ({ fetch }) => {
         date
         title
         artistName
+        releaseDate
+        archive
         tracks {
           title
           file
@@ -45,6 +48,9 @@ export const load: LayoutLoad = async ({ fetch }) => {
 		},
 		body: JSON.stringify({ query })
 	});
+
+  if (!res.ok) error(404);
+  
 	const response = await res.json();
 	return { response };
 };

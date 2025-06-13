@@ -7,11 +7,11 @@
 	import { PUBLIC_DEV_MEDIA_URL, PUBLIC_PROD_MEDIA_URL } from '$env/static/public';
 
 	import { MIN_DESKTOP_SIZE } from '$lib/constants';
+	import type { Playlist } from '$lib/types';
 	import BottomSheet from '$lib/ui/BottomSheet.svelte';
 	import AudioPlayer from './AudioPlayer.svelte';
 	import LyricsCard from './LyricsCard.svelte';
 	import PlaylistCard from './PlaylistCard.svelte';
-	import type { Playlist } from './+page';
 	import '../app.css';
 
 	const WP_UPLOADS = dev ? PUBLIC_DEV_MEDIA_URL : PUBLIC_PROD_MEDIA_URL;
@@ -25,7 +25,7 @@
 
 	let selectedId = $derived(page.url.searchParams.get('playlist'));
 	let selectedPlaylist = $derived(playlists.find((p) => `${p.databaseId}` === selectedId));
-	
+
 	let lyricsWidth = $state(0);
 	let showPlaylist = $state(false);
 
@@ -47,17 +47,17 @@
 	setContext('audioPlayer', () => audioPlayer);
 
 	function onSelectSong(file: string, playlistId: number) {
-    const album = playlists.find((_) => _.databaseId === playlistId);
-    const song = album?.tracks.find((track) => track.file === file);
+		const album = playlists.find((_) => _.databaseId === playlistId);
+		const song = album?.tracks.find((track) => track.file === file);
 
-    if (!song) throw new Error("A playlist with that song file could not be found.");
+		if (!song) throw new Error('A playlist with that song file could not be found.');
 
 		audioPlayer = {
 			artist: song.artist,
 			src: song.file,
 			trackId: song.id,
 			title: song.title,
-      lyrics: song.lyrics,
+			lyrics: song.lyrics,
 			paused: false,
 			playlist: album!,
 			onSelectSong
@@ -65,7 +65,7 @@
 	}
 
 	let showLyrics = $state(false);
-	
+
 	let showBottomSheet = $derived(showPlaylist || showLyrics);
 	let showAudioPlayer = $derived(audioPlayer.src);
 
@@ -75,7 +75,9 @@
 		#y = $state(0);							// scroll y position
 		#isDesktop = $state(false);	// screen width exceeds MIN_DESKTOP_SIZE
 		
-		get vh() { return this.#vh; }
+		get vh() {
+			return this.#vh;
+		}
 		set vh(val) {
 			this.#vh = val;
 		}
@@ -141,7 +143,7 @@
 		if (event.code === 'Space') {
 			event.preventDefault();
 			if (audioPlayer.src) {
-				audioPlayer.paused = !audioPlayer.paused; 
+				audioPlayer.paused = !audioPlayer.paused;
 			}
 		}
 	}
@@ -155,7 +157,12 @@
 	/>
 </svelte:head>
 
-<svelte:window bind:innerWidth={vp.vw} bind:innerHeight={vp.vh} bind:scrollY={vp.y} onkeydown="{handleKeyDown}" />
+<svelte:window
+	bind:innerWidth={vp.vw}
+	bind:innerHeight={vp.vh}
+	bind:scrollY={vp.y}
+	onkeydown={handleKeyDown}
+/>
 
 {#snippet header()}
 	<header
@@ -236,9 +243,17 @@
 				{@render children()}
 			</div>
 			{#if vp.isDesktop}
-				<div class="desktop-lyrics-container display-none lg:relative max-w-1/2 basis-1/2 shrink" bind:clientWidth={lyricsWidth}>
+				<div
+					class="desktop-lyrics-container display-none max-w-1/2 shrink basis-1/2 lg:relative"
+					bind:clientWidth={lyricsWidth}
+				>
 					{#if showLyrics && audioPlayer.lyrics}
-						<div class="desktop-lyrics__content rounded-sm p-4 fixed backdrop-blur-sm" style:width="{lyricsWidth}px" style:background-color="rgba(255, 255, 255, 0.4)" transition:fade>
+						<div
+							class="desktop-lyrics__content fixed rounded-sm p-4 backdrop-blur-sm"
+							style:width="{lyricsWidth}px"
+							style:background-color="rgba(255, 255, 255, 0.4)"
+							transition:fade
+						>
 							<h1 class="text-xl font-bold">{@html audioPlayer.title}</h1>
 							<p class="mb-4 text-sm">Written by {audioPlayer.artist}</p>
 							<pre class="font-sans whitespace-pre-wrap">{audioPlayer.lyrics}</pre>

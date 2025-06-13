@@ -1,4 +1,8 @@
-# sv
+# Hulagram 2025
+A headless WordPress "theme."
+
+When deploying to Cloudflare Pages the domain paths in `.env` must be added to Cloudflare Pages
+Environment Variables, otherwise URL paths will be undefined and the build will break.
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 

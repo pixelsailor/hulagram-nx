@@ -16,6 +16,35 @@
 	function selectSongHandler(file: string) {
 		audioPlayer.onSelectSong(file, playlist.databaseId);
 	}
+
+	async function downloadSong(event: Event, filepath: string) {
+    event.preventDefault();
+
+    try {
+      const response = await fetch(filepath);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error. Status: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = filepath;
+      link.style.display = 'none';
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error('Download failed:', error);
+      throw error;
+    }
+  }
 </script>
 
 <ul class="playlist__tracks">
@@ -30,7 +59,7 @@
 				<p class="playlist__track__name">{track.title}</p>
 			</div>
 			{#if track.downloadable && isDesktop && allowDownloads}
-				<IconButton label="Download">
+				<IconButton label="Download" title="Download song" onClick={(e: Event) => downloadSong(e, track.file)}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 24 24"
@@ -71,7 +100,7 @@
 					</div>
 				</div>
 			{:else}
-				<IconButton onclick={() => selectSongHandler(track.file)} label="Play" class="-mr-2 lg:mr-0">
+				<IconButton onClick={() => selectSongHandler(track.file)} label="Play" class="-mr-2 lg:mr-0">
 					<svg
 						class="play-icon"
 						viewBox="0 0 24 24"

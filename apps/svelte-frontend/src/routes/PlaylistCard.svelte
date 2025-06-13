@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 
-  import type { Playlist } from './+page';
+  import type { Playlist } from '$lib/types';
 	import Tracklist from './Tracklist.svelte';
 
   let { playlist, showPlaylist = $bindable() }: { playlist: Playlist, showPlaylist: boolean } = $props();
