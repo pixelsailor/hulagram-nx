@@ -99,7 +99,7 @@
 				<p class="song-title truncate font-bold">{title}</p>
 				<p class="truncate text-sm">
 					<span class="artist-name">{artist || playlist.artistName}</span> &mdash;
-					<span class="album-name">{playlist.title}</span>
+					<span class="album-name"><a href="?playlist={playlist.databaseId}">{playlist.title}</a></span>
 				</p>
 			</div>
 			<p class="audio-player__time text-sm text-gray-900">
