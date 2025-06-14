@@ -1,10 +1,14 @@
 <script lang="ts">
+	import { getContext } from 'svelte';
+	import { DropdownMenu } from 'bits-ui';
+
 	import Toolbar from '$lib/ui/Toolbar.svelte';
 	import IconButton from '$lib/ui/IconButton.svelte';
 	import type { Playlist } from '$lib/types';
-	import { getContext } from 'svelte';
 
-	let { paused = $bindable<boolean>(), showPlaylist = $bindable() } = $props();
+	import { siteSettings } from '$lib/services/settings.svelte';
+
+	let { paused = $bindable<boolean>(), showPlaylist = $bindable(), isDesktop = false } = $props();
 
 	const getAudioPlayer: any = getContext('audioPlayer');
 	let audioPlayer = $derived(getAudioPlayer());
@@ -16,6 +20,10 @@
 	let playlist = $derived(audioPlayer.playlist);
 
 	let playerWidth = $state();
+
+	// Display/Performance properties
+	let frostedBackgrounds = $state(true);
+	let showVideo = $state(true);
 
 	let time = $state(0);
 	let duration = $state(0);
@@ -141,21 +149,76 @@
         </svg>
 				</IconButton>
 			</div>
-			{#if hasLyrics}
-				<IconButton
-					onClick={toggleLyrics}
-					disabled={!hasLyrics}
-					title="{lyricsCtx.get() ? 'Hide' : 'Show'} lyrics"
-					class="-mr-2"
-				>
-					<svg id="lyrics-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-						<path
-							style:fill={lyricsCtx.get() ? 'black' : 'white'}
-							d="m20.088 2.783c-.08-.359-.352-.646-.706-.746-.15-.042-3.73-1.037-7.382-1.037s-7.231.995-7.382 1.037c-.354.1-.626.387-.706.746-.037.168-.912 4.165-.912 9.217s.875 9.049.912 9.217c.08.359.352.646.706.746.15.042 3.73 1.037 7.382 1.037s7.231-.995 7.382-1.037c.354-.1.626-.387.706-.746.037-.168.912-4.165.912-9.217s-.875-9.049-.912-9.217zm-9.088 13.217h-3c-.553 0-1-.447-1-1s.447-1 1-1h3c.553 0 1 .447 1 1s-.447 1-1 1zm5-4h-8c-.553 0-1-.447-1-1s.447-1 1-1h8c.553 0 1 .447 1 1s-.447 1-1 1zm0-4h-8c-.553 0-1-.447-1-1s.447-1 1-1h8c.553 0 1 .447 1 1s-.447 1-1 1z"
-						/>
-					</svg>
-				</IconButton>
-			{/if}
+			<div class="flex flex-row flex-nowrap">
+				{#if hasLyrics}
+					<IconButton
+						onClick={toggleLyrics}
+						disabled={!hasLyrics}
+						title="{lyricsCtx.get() ? 'Hide' : 'Show'} lyrics"
+						class="-mr-2 lg:mr-0"
+					>
+						<svg id="lyrics-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path
+								style:fill={lyricsCtx.get() ? 'black' : 'white'}
+								d="m20.088 2.783c-.08-.359-.352-.646-.706-.746-.15-.042-3.73-1.037-7.382-1.037s-7.231.995-7.382 1.037c-.354.1-.626.387-.706.746-.037.168-.912 4.165-.912 9.217s.875 9.049.912 9.217c.08.359.352.646.706.746.15.042 3.73 1.037 7.382 1.037s7.231-.995 7.382-1.037c.354-.1.626-.387.706-.746.037-.168.912-4.165.912-9.217s-.875-9.049-.912-9.217zm-9.088 13.217h-3c-.553 0-1-.447-1-1s.447-1 1-1h3c.553 0 1 .447 1 1s-.447 1-1 1zm5-4h-8c-.553 0-1-.447-1-1s.447-1 1-1h8c.553 0 1 .447 1 1s-.447 1-1 1zm0-4h-8c-.553 0-1-.447-1-1s.447-1 1-1h8c.553 0 1 .447 1 1s-.447 1-1 1z"
+							/>
+						</svg>
+					</IconButton>
+				{/if}
+				{#if isDesktop}
+					<DropdownMenu.Root>
+						<DropdownMenu.Trigger>
+							<button class="flex items-center justify-center min-w-12 -mr-1">
+								<span class="icon-button__icon flex w-8 h-8">
+									<svg width="100%" height="100%" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+										<path d="M1,12C1,6.878 2.25,1 12,1C21.75,1 23,6.878 23,12C23,17.122 21.75,23 12,23C2.25,23 1,17.122 1,12ZM17.859,9.463C18.404,9.539 18.912,9.162 18.991,8.615C19.07,8.069 18.691,7.562 18.144,7.483C16.615,7.263 14.308,7 12.001,7C11.363,7 10.69,7.027 10.001,7.066L10.001,6C10.001,5.448 9.553,5 9.001,5C8.449,5 8.001,5.448 8.001,6L8.001,7.226C7.304,7.297 6.594,7.38 5.858,7.486C5.311,7.565 4.932,8.072 5.011,8.619C5.088,9.169 5.609,9.547 6.144,9.466C6.774,9.376 7.392,9.302 8.001,9.237L8.001,10.001C8.001,10.553 8.449,11.001 9.001,11.001C9.553,11.001 10.001,10.553 10.001,10.001L10.001,9.071C10.697,9.03 11.374,9.001 12.001,9.001C14.189,9.001 16.395,9.252 17.859,9.463ZM17.859,17.463C18.404,17.539 18.912,17.162 18.991,16.615C19.07,16.069 18.691,15.562 18.144,15.483C17.537,15.395 16.804,15.302 16.001,15.22L16.001,14C16.001,13.448 15.553,13 15.001,13C14.449,13 14.001,13.448 14.001,14L14.001,15.061C13.346,15.024 12.675,15 12.001,15C10.157,15 8.091,15.164 5.858,15.486C5.311,15.565 4.932,16.072 5.011,16.619C5.088,17.169 5.609,17.547 6.144,17.466C8.252,17.162 10.277,17.001 12.001,17.001C12.674,17.001 13.347,17.027 14.001,17.066L14.001,18.001C14.001,18.553 14.449,19.001 15.001,19.001C15.553,19.001 16.001,18.553 16.001,18.001L16.001,17.231C16.693,17.304 17.325,17.386 17.859,17.463Z"/>
+								</svg>
+								</span>
+								<span class="sr-only">Display options</span>
+							</button>
+						</DropdownMenu.Trigger>
+						<DropdownMenu.Portal>
+							<DropdownMenu.Content
+								side="top"
+								sideOffset={12}
+								collisionPadding={12}
+								class="border-muted bg-white shadow-md outline-hidden w-max rounded-sm py-2"
+							>
+								<DropdownMenu.CheckboxItem
+									bind:checked={siteSettings.useFrostedOpacity}
+									class="rounded-button data-highlighted:bg-muted flex flex-row flex-nowrap justify-between h-12 select-none items-center px-3 text-md"
+								>
+									{#snippet children({ checked })}
+										<div class="w-max">Show frosted backgrounds</div>
+										<div class="w-8 h-8 flex items-center overflow-hidden ml-3 -mr-2">
+											{#if checked}
+												<svg class="checkbox__check" width="100" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path d="M9 12L10.5 13.5V13.5C10.7761 13.7761 11.2239 13.7761 11.5 13.5V13.5L15 10" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+												</svg>
+											{/if}
+										</div>
+									{/snippet}
+								</DropdownMenu.CheckboxItem>
+								<DropdownMenu.CheckboxItem
+									bind:checked={siteSettings.playVideo}
+									class="rounded-button data-highlighted:bg-muted flex flex-row flex-nowrap justify-between h-12 select-none items-center px-3 text-md"
+								>
+									{#snippet children({ checked })}
+										<div class="w-max">Play video</div>
+										<div class="w-8 h-8 flex items-center overflow-hidden ml-3 -mr-2">
+											{#if checked}
+												<svg class="checkbox__check" width="100" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path d="M9 12L10.5 13.5V13.5C10.7761 13.7761 11.2239 13.7761 11.5 13.5V13.5L15 10" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+												</svg>
+											{/if}
+										</div>
+									{/snippet}
+								</DropdownMenu.CheckboxItem>
+							</DropdownMenu.Content>
+						</DropdownMenu.Portal>
+					</DropdownMenu.Root>
+				{/if}
+			</div>
 		</div>
 	</Toolbar>
 </div>
@@ -182,5 +245,9 @@
 		position: absolute;
 		right: 0;
 		top: 0;
+	}
+
+	.checkbox__check {
+		transform: scale(1.25);
 	}
 </style>
