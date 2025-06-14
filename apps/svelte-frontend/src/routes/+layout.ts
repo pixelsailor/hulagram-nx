@@ -52,5 +52,5 @@ export const load: LayoutLoad = async ({ fetch }) => {
   if (!res.ok) error(404);
   
 	const response = await res.json();
-	return { response };
+	return { response }; // "response" will be the key name in the `$props()` `data` object
 };

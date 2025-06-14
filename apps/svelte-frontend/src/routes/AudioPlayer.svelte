@@ -7,6 +7,7 @@
 	import type { Playlist } from '$lib/types';
 
 	import { siteSettings } from '$lib/services/settings.svelte';
+	import { goto } from '$app/navigation';
 
 	let { paused = $bindable<boolean>(), showPlaylist = $bindable(), isDesktop = false } = $props();
 
@@ -21,10 +22,6 @@
 
 	let playerWidth = $state();
 
-	// Display/Performance properties
-	let frostedBackgrounds = $state(true);
-	let showVideo = $state(true);
-
 	let time = $state(0);
 	let duration = $state(0);
 
@@ -38,6 +35,9 @@
 	const lyricsCtx: any = getContext('lyrics');
 
 	function toggleLyrics() {
+		const params = new URLSearchParams(window.location.search);
+		// params.set('view', 'lyrics');
+		goto(`/?${params.toString()}`, { keepFocus: true, replaceState: false, noScroll: true });
 		lyricsCtx.set(!lyricsCtx.get());
 	}
 

@@ -26,6 +26,15 @@ export type Playlists = {
 	};
 };
 
+export type Page = {
+	data: {
+		page: {
+			title: string;
+			content: string;
+		}
+	}
+}
+
 //
 export type PlaylistContext = {
 	isVisible: () => void;

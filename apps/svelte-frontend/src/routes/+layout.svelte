@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '@fontsource/allison';
-	import { onMount, setContext } from 'svelte';
-	import { fade } from 'svelte/transition';
+	import { setContext } from 'svelte';
+	import { fade, slide } from 'svelte/transition';
 	import { dev } from '$app/environment';
 	import { page } from '$app/state';
 	import { PUBLIC_DEV_MEDIA_URL, PUBLIC_PROD_MEDIA_URL } from '$env/static/public';
@@ -15,6 +15,8 @@
 	import '../app.css';
 
 	import { siteSettings } from '$lib/services/settings.svelte';
+	import { goto } from '$app/navigation';
+	import Tracklist from './Tracklist.svelte';
 
 	const WP_UPLOADS = dev ? PUBLIC_DEV_MEDIA_URL : PUBLIC_PROD_MEDIA_URL;
 	const BG_OPACITY = 0.6;
@@ -25,13 +27,15 @@
 
 	setContext('playlists', playlists);
 
-	let selectedId = $derived(page.url.searchParams.get('playlist'));
-	let selectedPlaylist = $derived(playlists.find((p) => `${p.databaseId}` === selectedId));
+	let playlistId = $derived(page.url.searchParams.get('playlist'));
+	let selectedPlaylist = $derived(playlists.find((p) => `${p.databaseId}` === playlistId));
+
+	let showPlaylist = $state(false);
+	let showAboutUs = $derived(page.route.id?.includes('about-randy-and-linda'));
 
 	let lyricsWidth = $state(0);
-	let showPlaylist = $state(false);
 
-	let video = $state<HTMLMediaElement>()
+	let video = $state<HTMLMediaElement>();
 
 	setContext('showPlaylist', {
 		get: () => (selectedPlaylist ? showPlaylist : false),
@@ -70,7 +74,7 @@
 
 	let showLyrics = $state(false);
 
-	let showBottomSheet = $derived(showPlaylist || showLyrics);
+	let showBottomSheet = $derived(showPlaylist || showLyrics || !!showAboutUs);
 	let showAudioPlayer = $derived(audioPlayer.src);
 
 	class Viewport {
@@ -141,6 +145,10 @@
 		showBottomSheet = !showBottomSheet;
 		showPlaylist = false;
 		showLyrics = false;
+		// clear about-randy-and-linda route
+		const params = new URLSearchParams(window.location.search);
+    params.get('playlist');
+    goto(`/?${params.toString()}`, { keepFocus: true, replaceState: true, noScroll: true });
 	}
 
 	function handleKeyDown(event: KeyboardEvent) {
@@ -150,6 +158,23 @@
 				audioPlayer.paused = !audioPlayer.paused;
 			}
 		}
+	}
+
+	function selectPlaylist(id: number) {
+    const params = new URLSearchParams(window.location.search);
+    params.set('playlist', `${id}`);
+    goto(`?${params.toString()}`, { keepFocus: true, replaceState: false, noScroll: true });
+    // if (!vp.isDesktop) showPlaylistCtx.set(true);
+    if (!vp.isDesktop) { 
+			showPlaylist = true;
+		}
+  }
+
+	function gotoAbout(event: Event) {
+		event.preventDefault();
+		showLyrics = false;
+		const params = new URLSearchParams(window.location.search);
+		goto(`about-randy-and-linda?${params.toString()}`, { noScroll: vp.isDesktop == false});
 	}
 
 	$effect(() => {
@@ -181,7 +206,12 @@
 		class="grid h-[50vh] w-full grid-flow-row gap-4 lg:fixed lg:top-0 lg:flex lg:h-16 lg:justify-between lg:px-6"
 		bind:clientHeight={headerHeight}
 	>
-		<h1 class="allison self-end text-center text-7xl lg:self-center lg:text-4xl">{@html title}</h1>
+		<h1 class="site-title allison self-end text-center text-7xl lg:self-center lg:text-4xl">
+			<a href="about-randy-and-linda" class="inline-flex" onclick={gotoAbout}>
+				<span class="about-text hidden w-fit">About</span>
+				{@html title}
+			</a>
+		</h1>
 		<h2 class="allison self-start text-center text-5xl lg:self-center lg:text-4xl">
 			<span class="hidden lg:inline">{@html description}</span>
 			<span class="lg:hidden">Songs of Hope</span>
@@ -245,28 +275,56 @@
 	<main class={['px-4 lg:py-24', { 'pb-24': !vp.isDesktop && showAudioPlayer }]}>
 		<div class="main__container flex w-full flex-row gap-12">
 			<div class="playlist-container min-w-1/2 2xl:min-w-3/5">
-				{@render children()}
+				<ul class="">
+					{#each playlists as playlist}
+						<li class="playlist py-6">
+							<div class="playlist__title">
+								<button type="button" class="button" onclick={() => selectPlaylist(playlist.databaseId)}>
+									{@html playlist.title}
+								</button>
+							</div>
+							{#if vp.isDesktop && playlistId === `${playlist.databaseId}`}
+								<div transition:slide>
+									<div class="playlist__meta flex h-14 py-2 items-center justify-between">
+										<p class="playlist__artist text-sm italic">{playlist.artistName}</p>
+										{#if playlist.archive}
+											<div class="hidden lg:inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3">
+												<a href="{playlist.archive}" data-sveltekit-preload-data="tap" download>Download all</a>
+											</div>
+										{/if}
+									</div>
+									<Tracklist playlist={playlist} isDesktop={vp.isDesktop} />
+								</div>
+							{/if}
+						</li>
+					{/each}
+					<li class="lg:hidden py-6">
+						<div class="playlist__title">
+							<button class="button" onclick={gotoAbout}>
+								About Us
+							</button>
+						</div>
+					</li>
+				</ul>
 			</div>
 			{#if vp.isDesktop}
 				<div
 					class="desktop-lyrics-container display-none max-w-1/2 shrink basis-1/2 lg:relative"
 					bind:clientWidth={lyricsWidth}
 				>
-					{#if showLyrics && audioPlayer.lyrics}
+					{#if (showLyrics && audioPlayer.lyrics) || showAboutUs}
 						<div
 							class={[
 								'desktop-lyrics__content fixed rounded-sm p-4',
 								{ 'backdrop-blur-sm': siteSettings.useFrostedOpacity }
 							]}
 							style:width="{lyricsWidth}px"
-							style:background-color="rgba(255, 255, 255, 0.4)"
+							style:background-color={siteSettings.useFrostedOpacity ? 'rgba(255, 255, 255, 0.4)' : 'rgba(239,255,252, 0.75)'}
 							transition:fade
 						>
-							<h1 class="text-xl font-bold">{@html audioPlayer.title}</h1>
-							<p class="mb-4 text-sm">Written by {audioPlayer.artist}</p>
-							<pre class="font-sans whitespace-pre-wrap">{audioPlayer.lyrics}</pre>
+							{@render children()}
 						</div>
-					{/if}
+						{/if}
 				</div>
 			{/if}
 		</div>
@@ -292,6 +350,13 @@
 			{#if showLyrics && audioPlayer.lyrics}
 				<LyricsCard lyrics={audioPlayer.lyrics} bind:showLyrics />
 			{/if}
+			{#if showAboutUs}
+				<article class="flex flex-col">
+					<main class="lyrics__content pb-4">
+						{@render children()}
+					</main>
+				</article>
+			{/if}
 		</BottomSheet>
 	{/if}
 	{#if audioPlayer.src}
@@ -313,4 +378,16 @@
 	.audioplayer-open.bottomsheet-closed {
 		height: 5.5rem;
 	}
+
+	.site-title:hover .about-text {
+		display: inline;
+		padding-right: .5rem;
+		/* translate: scaleX(1); */
+	}
+
+	.button {
+    text-align: inherit;
+    text-transform: inherit;
+    line-height: 1;
+  }
 </style>

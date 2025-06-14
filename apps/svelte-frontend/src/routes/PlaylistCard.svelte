@@ -13,7 +13,7 @@
   <header class="card__header">
     <h1 class="playlist__title">{@html playlist.title}</h1>
     <div class="playlist__meta flex h-12 items-center">
-      <p class="playlist__artist text-sm">{@html playlist.artistName}</p>
+      <p class="playlist__artist text-sm italic">{@html playlist.artistName}</p>
     </div>
   </header>
   <main class="playlist__content pb-4">

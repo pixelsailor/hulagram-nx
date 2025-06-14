@@ -13,3 +13,7 @@
 button:hover {
   cursor: pointer;
 }
+
+.about-page p {
+  margin: 1rem 0;
+}
