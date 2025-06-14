@@ -3,6 +3,7 @@
 	import { LIST_ITEM_PADDING } from '$lib/constants';
 	import { type Playlist, type Track } from '$lib/types';
 	import IconButton from '$lib/ui/IconButton.svelte';
+	import { siteSettings } from '$lib/services/settings.svelte';
 
 	let { playlist, isDesktop }: { playlist: Playlist; isDesktop: boolean } = $props();
 
@@ -51,8 +52,9 @@
 	{#each tracklist as track}
 		<li
 			class={[
-				`playlist__track flex h-14 items-center py-${LIST_ITEM_PADDING} lg:gap-1 lg:rounded-sm lg:pr-2 lg:pl-4 lg:backdrop-blur-sm`,
-				{ 'desktop-track': isDesktop }
+				`playlist__track flex h-14 items-center py-${LIST_ITEM_PADDING} lg:gap-1 lg:rounded-sm lg:pr-2 lg:pl-4`,
+				{ 'desktop-track': isDesktop },
+				{ 'lg:backdrop-blur-sm': siteSettings.useFrostedOpacity }
 			]}
 		>
 			<div class="playlist__track basic-[fit-content] grow">

@@ -14,6 +14,8 @@
 	import PlaylistCard from './PlaylistCard.svelte';
 	import '../app.css';
 
+	import { siteSettings } from '$lib/services/settings.svelte';
+
 	const WP_UPLOADS = dev ? PUBLIC_DEV_MEDIA_URL : PUBLIC_PROD_MEDIA_URL;
 	const BG_OPACITY = 0.6;
 
@@ -28,6 +30,8 @@
 
 	let lyricsWidth = $state(0);
 	let showPlaylist = $state(false);
+
+	let video = $state<HTMLMediaElement>()
 
 	setContext('showPlaylist', {
 		get: () => (selectedPlaylist ? showPlaylist : false),
@@ -147,6 +151,14 @@
 			}
 		}
 	}
+
+	$effect(() => {
+		if (!siteSettings.playVideo) {
+			video?.pause();
+		} else {
+			video?.play()
+		}
+	});
 </script>
 
 <svelte:head>
@@ -184,6 +196,7 @@
 <div class="site-background fixed inset-0 -z-10 flex" style:opacity={vp.isDesktop ? '1' : opacity}>
 	{#if vp.isDesktop}
 		<video
+			bind:this={video}
 			poster={`${WP_UPLOADS}/tropical-beach-aerial-loop.webp`}
 			id="site-background__video"
 			class="h-full w-full object-cover"
@@ -200,14 +213,6 @@
 				role="presentation"
 			/>
 		</video>
-		<!-- <picture class="fixed inset-0 flex">
-			<img
-				src={`${WP_UPLOADS}/2025/05/bg-waves__375-812-216.webp`}
-				alt="Overhead view of a shoreline with small waves gently crashing on a beach"
-				role="presentation"
-				class="w-full object-cover object-left-bottom hidden"
-			/>
-		</picture> -->
 	{:else}
 		<picture class="fixed inset-0 flex">
 			<source
@@ -249,7 +254,10 @@
 				>
 					{#if showLyrics && audioPlayer.lyrics}
 						<div
-							class="desktop-lyrics__content fixed rounded-sm p-4 backdrop-blur-sm"
+							class={[
+								'desktop-lyrics__content fixed rounded-sm p-4',
+								{ 'backdrop-blur-sm': siteSettings.useFrostedOpacity }
+							]}
 							style:width="{lyricsWidth}px"
 							style:background-color="rgba(255, 255, 255, 0.4)"
 							transition:fade
@@ -288,7 +296,7 @@
 	{/if}
 	{#if audioPlayer.src}
 		<div class="audio-player__container h-22 w-full overflow-hidden pt-1" style:flex="0 0 5.5rem">
-			<AudioPlayer bind:paused={audioPlayer.paused} bind:showPlaylist />
+			<AudioPlayer bind:paused={audioPlayer.paused} bind:showPlaylist isDesktop={vp.isDesktop} />
 		</div>
 	{/if}
 </footer>
