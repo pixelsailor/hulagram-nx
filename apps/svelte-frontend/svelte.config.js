@@ -5,9 +5,7 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 const config = {
 	preprocess: vitePreprocess(),
 	kit: { adapter: adapter({
-		// fallback: 'index.html'
-		runtime: 'edge',
-		regions: ['sfo1']
+		fallback: 'index.html'
 	}) }
 };
 
