@@ -4,7 +4,7 @@
 	import { fade, slide } from 'svelte/transition';
 	import { dev } from '$app/environment';
 	import { page } from '$app/state';
-	import { PUBLIC_DEV_MEDIA_URL, PUBLIC_PROD_MEDIA_URL } from '$env/static/public';
+	import { PUBLIC_DEV_MEDIA_URL, PUBLIC_DEV_URL, PUBLIC_PROD_MEDIA_URL, PUBLIC_PROD_URL } from '$env/static/public';
 
 	import { MIN_DESKTOP_SIZE } from '$lib/constants';
 	import type { Playlist } from '$lib/types';
@@ -17,13 +17,57 @@
 	import { siteSettings } from '$lib/services/settings.svelte';
 	import { goto } from '$app/navigation';
 	import Tracklist from './Tracklist.svelte';
+	// import { ApiClient } from '$lib/api';
 
 	const WP_UPLOADS = dev ? PUBLIC_DEV_MEDIA_URL : PUBLIC_PROD_MEDIA_URL;
 	const BG_OPACITY = 0.6;
 
+	// const apiClient = new ApiClient({ baseUrl: dev ? PUBLIC_DEV_URL : PUBLIC_PROD_URL });
+	
 	let { children, data } = $props();
 	const { title, description } = data.response.data.generalSettings;
 	const playlists: Playlist[] = data.response.data.playlists.nodes;
+
+	// let data = $state();
+
+	// $onMount(async () => {
+	// 	const query = `{
+	// 		generalSettings {
+	// 			title
+	// 			description
+	// 		},
+	// 		playlists {
+	// 			nodes {
+	// 				databaseId
+	// 				date
+	// 				title
+	// 				artistName
+	// 				releaseDate
+	// 				archive
+	// 				tracks {
+	// 					title
+	// 					file
+	// 					id
+	// 					artist
+	// 					lyrics
+	// 					downloadable
+	// 				}
+	// 			}
+	// 		}
+	// 	}`;
+
+	// 	try {
+	// 		data = await apiClient.graphql(query);
+	// 	} catch (error) {
+	// 		console.error('Failed to fetch data', error);
+	// 	} finally {
+	// 		// loading = false;
+	// 	}
+	// });
+	
+	// let title = $state('');
+	// let description = $state('');
+	// let playlists = $state<Playlist[]>([]);
 
 	setContext('playlists', playlists);
 
@@ -227,7 +271,7 @@
 	{#if vp.isDesktop}
 		<video
 			bind:this={video}
-			poster={`${WP_UPLOADS}/tropical-beach-aerial-loop.webp`}
+			poster={`${WP_UPLOADS}/tropical-beach-aerial-loop-low.webp`}
 			id="site-background__video"
 			class="h-full w-full object-cover"
 			muted
