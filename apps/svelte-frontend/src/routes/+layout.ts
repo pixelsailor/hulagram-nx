@@ -1,5 +1,5 @@
 import { dev } from '$app/environment';
-import { PUBLIC_DEV_API, PUBLIC_PROD_API } from '$env/static/public';
+import { PUBLIC_DEV_API, PUBLIC_DEV_URL, PUBLIC_PROD_API, PUBLIC_PROD_URL } from '$env/static/public';
 import { error } from '@sveltejs/kit';
 
 import type { LayoutLoad } from './$types';
@@ -12,6 +12,8 @@ export type GeneralSettings = {
 		};
 	};
 };
+
+// export const prerender = true;
 
 const path = dev ? PUBLIC_DEV_API : PUBLIC_PROD_API;
 
@@ -44,7 +46,10 @@ export const load: LayoutLoad = async ({ fetch }) => {
 	const res = await fetch(path, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+      'Access-Control-Allow-Methods': 'GET, POST',
+      'Access-Control-Allow-Origin': dev ? PUBLIC_DEV_URL : PUBLIC_PROD_URL,
+      'Access-Control-Allow-Headers': '*',
 		},
 		body: JSON.stringify({ query })
 	});
