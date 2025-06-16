@@ -1,11 +1,6 @@
 import { error } from '@sveltejs/kit';
 import { dev } from '$app/environment';
-import {
-	PUBLIC_DEV_API,
-	PUBLIC_PROD_API,
-	PUBLIC_DEV_URL,
-	PUBLIC_PROD_URL
-} from '$env/static/public';
+import { PUBLIC_DEV_API, PUBLIC_PROD_API } from '$env/static/public';
 import type { PageLoad } from './$types';
 
 // export const prerender = true;
@@ -23,10 +18,7 @@ export const load: PageLoad = async ({ fetch }) => {
 	const request = await fetch(graphqlApi, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json',
-			'Access-Control-Allow-Methods': 'GET, POST',
-			'Access-Control-Allow-Origin': dev ? PUBLIC_DEV_URL : PUBLIC_PROD_URL,
-			'Access-Control-Allow-Headers': '*'
+			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({ query })
 	});
