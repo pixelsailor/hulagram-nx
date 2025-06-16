@@ -271,7 +271,7 @@
 	{#if vp.isDesktop}
 		<video
 			bind:this={video}
-			poster={`${WP_UPLOADS}/tropical-beach-aerial-loop-low.webp`}
+			poster={`${WP_UPLOADS}/tropical-beach-aerial-loop.webp`}
 			id="site-background__video"
 			class="h-full w-full object-cover"
 			muted
@@ -282,7 +282,7 @@
 			playsinline
 		>
 			<source
-				src={`${WP_UPLOADS}/tropical-beach-aerial-loop.mp4`}
+				src={`${WP_UPLOADS}/tropical-beach-aerial-loop-low.mp4`}
 				type="video/mp4"
 				role="presentation"
 			/>
