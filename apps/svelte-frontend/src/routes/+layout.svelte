@@ -432,6 +432,11 @@
 		/* translate: scaleX(1); */
 	}
 
+	.playlist__title button {
+		line-height: 1;
+		text-transform: uppercase;
+	}
+
 	.button {
     text-align: inherit;
     text-transform: inherit;
