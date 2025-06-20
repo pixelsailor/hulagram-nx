@@ -5,7 +5,7 @@
 </script>
 
 <button
-  class={['icon-button', props.class]}
+  class={['button icon-button', props.class]}
   style:min-width={`${BUTTON_MIN_TARGET_HEIGHT / 4}rem`}
   style:height={`${BUTTON_MIN_TARGET_HEIGHT / 4}rem`}
   style={props.style}

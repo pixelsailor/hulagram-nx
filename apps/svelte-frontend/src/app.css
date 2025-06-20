@@ -1,6 +1,6 @@
 @import 'tailwindcss';
-@plugin '@tailwindcss/forms';
-@plugin '@tailwindcss/typography';
+/* @plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography'; */
 
 .allison {
   font-family: Allison, Georgia, 'Times New Roman', Times, serif;
@@ -13,7 +13,28 @@
 button:hover {
   cursor: pointer;
 }
+.button a {
+  display: inline-block;
+  padding: .75rem 1rem;
+}
+.button:hover svg path {
+  fill: oklch(92.8% 0.006 264.531);
+  opacity: 1;
+}
 
+/* WP classes */
 .about-page p {
   margin: 1rem 0;
+}
+.wp-block-image {
+  position: relative;
+}
+.alignright {
+  float: right;
+}
+.about-page .alignright {
+  margin-inline-start: 2rem;
+}
+.about-page a {
+  text-decoration: underline;
 }
