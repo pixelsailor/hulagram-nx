@@ -434,6 +434,7 @@
 
 	.playlist__title button {
 		line-height: 1;
+		text-align: left;
 		text-transform: uppercase;
 	}
 
