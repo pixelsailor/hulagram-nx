@@ -62,7 +62,7 @@
 			audioPlayer.artist = nextTrack.artist;
 			audioPlayer.lyrics = nextTrack.lyrics;
 			time = 0;
-			audioPlayer.paused = false;
+			paused = false;
 		}
 	}
 </script>
