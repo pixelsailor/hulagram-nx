@@ -61,7 +61,7 @@
 				<p class="playlist__track__name">{track.title}</p>
 			</div>
 			{#if track.downloadable && isDesktop && allowDownloads}
-				<IconButton label="Download" title="Download song" onClick={(e: Event) => downloadSong(e, track.file)}>
+				<IconButton size="lg" label="Download" title="Download song" onClick={(e: Event) => downloadSong(e, track.file)}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 24 24"
@@ -102,7 +102,7 @@
 					</div>
 				</div>
 			{:else}
-				<IconButton onClick={() => selectSongHandler(track.file)} label="Play" class="-mr-2 lg:mr-0">
+				<IconButton size="lg" onClick={() => selectSongHandler(track.file)} label="Play" class="-mr-2 lg:mr-0">
 					<svg
 						class="play-icon"
 						viewBox="0 0 24 24"

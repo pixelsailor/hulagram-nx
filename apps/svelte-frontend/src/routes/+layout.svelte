@@ -4,7 +4,7 @@
 	import { fade, slide } from 'svelte/transition';
 	import { dev } from '$app/environment';
 	import { page } from '$app/state';
-	import { PUBLIC_DEV_MEDIA_URL, PUBLIC_DEV_URL, PUBLIC_PROD_MEDIA_URL, PUBLIC_PROD_URL } from '$env/static/public';
+	import { PUBLIC_DEV_MEDIA_URL, PUBLIC_PROD_MEDIA_URL } from '$env/static/public';
 
 	import { MIN_DESKTOP_SIZE } from '$lib/constants';
 	import type { Playlist } from '$lib/types';
@@ -17,57 +17,13 @@
 	import { siteSettings } from '$lib/services/settings.svelte';
 	import { goto } from '$app/navigation';
 	import Tracklist from './Tracklist.svelte';
-	// import { ApiClient } from '$lib/api';
 
 	const WP_UPLOADS = dev ? PUBLIC_DEV_MEDIA_URL : PUBLIC_PROD_MEDIA_URL;
 	const BG_OPACITY = 0.6;
 
-	// const apiClient = new ApiClient({ baseUrl: dev ? PUBLIC_DEV_URL : PUBLIC_PROD_URL });
-	
 	let { children, data } = $props();
 	const { title, description } = data.response.data.generalSettings;
 	const playlists: Playlist[] = data.response.data.playlists.nodes;
-
-	// let data = $state();
-
-	// $onMount(async () => {
-	// 	const query = `{
-	// 		generalSettings {
-	// 			title
-	// 			description
-	// 		},
-	// 		playlists {
-	// 			nodes {
-	// 				databaseId
-	// 				date
-	// 				title
-	// 				artistName
-	// 				releaseDate
-	// 				archive
-	// 				tracks {
-	// 					title
-	// 					file
-	// 					id
-	// 					artist
-	// 					lyrics
-	// 					downloadable
-	// 				}
-	// 			}
-	// 		}
-	// 	}`;
-
-	// 	try {
-	// 		data = await apiClient.graphql(query);
-	// 	} catch (error) {
-	// 		console.error('Failed to fetch data', error);
-	// 	} finally {
-	// 		// loading = false;
-	// 	}
-	// });
-	
-	// let title = $state('');
-	// let description = $state('');
-	// let playlists = $state<Playlist[]>([]);
 
 	setContext('playlists', playlists);
 
@@ -207,13 +163,7 @@
 	function selectPlaylist(id: number) {
     const params = new URLSearchParams(window.location.search);
     params.set('playlist', `${id}`);
-    goto(`?${params.toString()}`, { keepFocus: true, replaceState: false, noScroll: true })
-			.then(() => {
-				const titleElement = document.getElementById(`playlist-${id}`);
-				const offsetTop = titleElement?.offsetTop;
-				window.scrollTo({top: offsetTop, behavior: 'smooth'});
-			});
-    // if (!vp.isDesktop) showPlaylistCtx.set(true);
+    goto(`?${params.toString()}`, { keepFocus: true, replaceState: false, noScroll: true });
     if (!vp.isDesktop) { 
 			showPlaylist = true;
 		}
@@ -225,6 +175,14 @@
 		const params = new URLSearchParams(window.location.search);
 		goto(`about-randy-and-linda?${params.toString()}`, { noScroll: vp.isDesktop == false});
 	}
+
+	// afterNavigate(() => {
+	// 	if (playlistId) {
+	// 		const titleElement = document.getElementById(`playlist-${playlistId}`);
+	// 		const offsetTop = titleElement?.offsetTop;
+	// 		window.scrollTo({top: offsetTop, behavior: 'smooth'});
+	// 	}
+	// });
 
 	$effect(() => {
 		if (!siteSettings.playVideo) {

@@ -1,7 +1,29 @@
 <script lang="ts">
 	import { BUTTON_MIN_TARGET_HEIGHT } from "$lib/constants";
+	import { onMount } from "svelte";
+	import type { MouseEventHandler } from "svelte/elements";
 
-  let { onClick, children, ...props } = $props();
+  type IconButtonProps = {
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    onClick: MouseEventHandler<HTMLButtonElement>;
+    children: any;
+    [x: string]: any
+  }
+
+  let { size = 'sm', onClick, children, ...props }: IconButtonProps = $props();
+
+  let iconSize = $state<string>();
+
+  onMount(() => {
+    const sizes = {
+      xs: 20,
+      sm: 24,
+      md: 24,
+      lg: 32,
+      xl: 40,
+    }
+    iconSize = `${sizes[size]}px`;
+  });
 </script>
 
 <button
@@ -13,7 +35,7 @@
   disabled={props.disabled}
   title={props.title}
 >
-  <span class="icon-button__icon">
+  <span class="icon-button__icon" style:width={iconSize} style:height={iconSize}>
     {@render children()}
   </span>
   {#if props.label}
@@ -33,7 +55,5 @@
 
   .icon-button__icon {
     display: flex;
-    width: 32px;
-    height: 32px;
   }
 </style>

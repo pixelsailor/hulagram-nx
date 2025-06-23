@@ -116,7 +116,7 @@
 		</div>
 		<div class="flex flex-row flex-nowrap lg:w-1/2 lg:basis-1/2 grow-0 lg:shrink lg:justify-between">
 			<div class="flex flex-row flex-nowrap">
-				<IconButton onClick={() => (paused = !paused)} title={paused ? 'Play' : 'Pause'}>
+				<IconButton size="xl" onClick={() => (paused = !paused)} title={paused ? 'Play' : 'Pause'}>
 					{#if paused}
 						<svg
 							id="play-icon"
@@ -143,7 +143,7 @@
 						</svg>
 					{/if}
 				</IconButton>
-				<IconButton onClick={() => (time = duration)} disabled={!hasNext} class={hasLyrics ? '0' : '-mr-2'}>
+				<IconButton size="lg" onClick={() => (time = duration)} disabled={!hasNext} class={hasLyrics ? '0' : '-mr-2'}>
           <svg width="100%" height="100%" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" id="play-next-icon">
             <path d="M23,12C23,19.71 19.71,23 12,23C4.29,23 1,19.71 1,12C1,4.29 4.29,1 12,1C19.71,1 23,4.29 23,12ZM18,15L18,9C18,8.448 17.553,8 17,8C16.447,8 16,8.448 16,9L16,15C16,15.552 16.447,16 17,16C17.553,16 18,15.552 18,15ZM14.747,11.335C14.574,11.142 13.606,10.112 11.44,8.829C9.128,7.459 7.689,7.146 7.628,7.133C7.129,7.027 6.63,7.316 6.472,7.801C6.452,7.86 5.999,9.279 5.999,12C5.999,14.721 6.452,16.14 6.472,16.199C6.628,16.688 7.14,16.973 7.628,16.867C7.689,16.854 9.128,16.541 11.44,15.171C13.606,13.888 14.574,12.858 14.747,12.665C15.084,12.286 15.084,11.714 14.747,11.335ZM10.421,10.549C11.384,11.119 12.071,11.626 12.527,12C12.071,12.374 11.383,12.88 10.421,13.451C9.483,14.007 8.719,14.363 8.173,14.584C8.084,13.987 8,13.124 8,12.001C8,10.878 8.084,10.014 8.173,9.418C8.719,9.639 9.483,9.994 10.421,10.549Z"/>
         </svg>
@@ -152,6 +152,7 @@
 			<div class="flex flex-row flex-nowrap">
 				{#if hasLyrics}
 					<IconButton
+						size="lg"
 						onClick={toggleLyrics}
 						disabled={!hasLyrics}
 						title="{lyricsCtx.get() ? 'Hide' : 'Show'} lyrics"
