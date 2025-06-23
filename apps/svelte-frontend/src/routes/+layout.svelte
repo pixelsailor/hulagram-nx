@@ -207,7 +207,12 @@
 	function selectPlaylist(id: number) {
     const params = new URLSearchParams(window.location.search);
     params.set('playlist', `${id}`);
-    goto(`?${params.toString()}`, { keepFocus: true, replaceState: false, noScroll: true });
+    goto(`?${params.toString()}`, { keepFocus: true, replaceState: false, noScroll: true })
+			.then(() => {
+				const titleElement = document.getElementById(`playlist-${id}`);
+				const offsetTop = titleElement?.offsetTop;
+				window.scrollTo({top: offsetTop, behavior: 'smooth'});
+			});
     // if (!vp.isDesktop) showPlaylistCtx.set(true);
     if (!vp.isDesktop) { 
 			showPlaylist = true;
@@ -246,20 +251,23 @@
 />
 
 {#snippet header()}
-	<header
-		class="grid h-[50vh] w-full grid-flow-row gap-4 lg:fixed lg:top-0 lg:flex lg:h-16 lg:justify-between lg:px-6"
-		bind:clientHeight={headerHeight}
+	<header class="lg:fixed lg:top-0 w-full" bind:clientHeight={headerHeight}
 	>
-		<h1 class="site-title allison self-end text-center text-7xl lg:self-center lg:text-4xl">
-			<a href="about-randy-and-linda" class="inline-flex" onclick={gotoAbout}>
-				<span class="about-text hidden w-fit">About</span>
-				{@html title}
-			</a>
-		</h1>
-		<h2 class="allison self-start text-center text-5xl lg:self-center lg:text-4xl">
-			<span class="hidden lg:inline">{@html description}</span>
-			<span class="lg:hidden">Songs of Hope</span>
-		</h2>
+		<div class="banner info bg-yellow-200 p-4">
+			<p>Your browser appears to have JavaScript disabled. To experience RandyAndLinda.com as it was intended, turn on JavaScript and refresh the page.</p>
+		</div>
+		<div class="grid h-[50vh] w-full grid-flow-row gap-4 lg:flex lg:h-16 lg:justify-between lg:px-6">
+			<h1 class="site-title allison self-end text-center text-7xl lg:self-center lg:text-4xl">
+				<a href="about-randy-and-linda" class="inline-flex" onclick={gotoAbout}>
+					<span class="about-text hidden w-fit">About</span>
+					{@html title}
+				</a>
+			</h1>
+			<h2 class="allison self-start text-center text-5xl lg:self-center lg:text-4xl">
+				<span class="hidden lg:inline">{@html description}</span>
+				<span class="lg:hidden">Songs of Hope</span>
+			</h2>
+		</div>
 	</header>
 {/snippet}
 
@@ -321,8 +329,8 @@
 			<div class="playlist-container min-w-1/2 2xl:min-w-3/5">
 				<ul class="">
 					{#each playlists as playlist}
-						<li class="playlist py-6">
-							<div class="playlist__title">
+						<li class="playlist py-6" id={`playlist-${playlist.databaseId}`}>
+							<div class="playlist__title" >
 								<button type="button" onclick={() => selectPlaylist(playlist.databaseId)}>
 									{@html playlist.title}
 								</button>
@@ -414,6 +422,12 @@
 </footer>
 
 <style>
+	:global {
+		.js header .banner {
+			display: none;
+		}
+	}
+
 	.site-mask {
 		clip-path: inset(var(--clipTop) 0 var(--clipBottom));
 	}
